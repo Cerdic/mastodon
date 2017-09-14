@@ -1,0 +1,33 @@
+<paquet
+	prefix="mastodon"
+	categorie="communication"
+	version="1.0.0"
+	etat="stable"
+	compatibilite="[3.0.0;3.2.*]"
+	schema="1.0.0"
+	logo="prive/themes/spip/images/mastodon-32.png"
+	documentation=""
+>
+
+	<nom>Mastodon</nom>
+	<!-- Un plugin Mastodon facile a installer -->
+
+	<auteur lien="https://nursit.com">C&#233;dric</auteur>
+
+	<copyright>2009-2013</copyright>
+	<licence lien="http://www.gnu.org/licenses/gpl-3.0.html">GPL 3</licence>
+
+	<traduire module="mastodon" reference="fr" gestionnaire="salvatore" />
+	<traduire module="paquet-mastodon" reference="fr" gestionnaire="salvatore" />
+
+
+	<pipeline nom="autoriser" inclure="mastodon_fonctions.php" />
+	<pipeline nom="declarer_tables_objets_sql" inclure="mastodon_administrations.php" />
+	<pipeline nom="notifications" inclure="inc/mastodon_notifications.php" />
+	<pipeline nom="taches_generales_cron" inclure="genie/mastodon.php" />
+	<pipeline nom="afficher_complement_objet" inclure="mastodon_pipelines.php" />
+
+	<menu nom="pouetter" titre="mastodon:titre_microblog" parent="menu_publication" icone="images/mastodon-16.png" />
+
+</paquet>
+        

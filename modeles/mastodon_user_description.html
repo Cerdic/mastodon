@@ -1,0 +1,32 @@
+#SET{is_defaut,#ENV{account}|=={#ENV{defaut}}|oui}
+[(#ENV{infos_compte/screen_name}|oui)
+<div class="mastodon user_desc[(#GET{is_defaut})defaut]">
+	<div class="name">
+		[(#ENV{infos_compte/protected}|oui)
+		[(#CHEMIN_IMAGE{cadenas-16.png}|balise_img{prive})]
+		]
+		<strong><img src="#ENV{infos_compte/profile_image_url}" class="spip_logos" width="32" height="32"/><a
+			href="[http://mastodon.com/(#ENV{infos_compte/screen_name})]">@#ENV{infos_compte/screen_name}</a></strong>
+		\(#ENV{infos_compte/name}\)
+		[(#GET{is_defaut}|oui)
+		#SET{fonction,<code><tt>tweet()</tt></code>}
+		<small><:mastodon:compte_defaut{fonction=#GET{fonction}}:></small>
+		]
+	</div>
+	<div class="description">
+		[(#ENV{infos_compte/description}|propre)]
+	</div>
+]
+[(#ENV{infos_compte/screen_name}|non)
+<div class="notice">
+	#SET{is_defaut,' '}
+	[(#SET{screen_name,[@(#ENV{account}|sinon{'???'})]})]
+	<:mastodon:erreur_connexion_compte{account=#GET{screen_name}}:>
+	]
+	<div class="actions">
+		[(#GET{is_defaut}|non)
+		[(#BOUTON_ACTION{<:mastodon:bouton_preferer_compte:>,[(#URL_ACTION_AUTEUR{preferer_mastodonaccount,#ENV{account},[(#SELF|ancre_url{comptes})]})]})]
+		]
+		[(#BOUTON_ACTION{<:mastodon:label_dissocier_compte_mastodon:>,[(#URL_ACTION_AUTEUR{supprimer_mastodonaccount,#ENV{account},[(#SELF|ancre_url{comptes})]})]})]
+	</div>
+</div>

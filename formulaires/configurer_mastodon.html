@@ -1,0 +1,179 @@
+<!-- nom=microblog -->
+#CACHE{0}
+<div class="formulaire_spip formulaire_editer formulaire_cfg">
+	<h3 class="titrem"><:mastodon:titre_configurer_mastodon_app:></h3>
+	[<p class='reponse_formulaire reponse_formulaire_erreur'>(#ENV*{message_erreur})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+
+	<BOUCLE_cond(CONDITION){si #ENV{mastodon_consumer_key}|strlen|et{#ENV{mastodon_consumer_secret}|strlen}}>
+	<fieldset id="comptes">
+		<legend><:mastodon:legend_comptes_mastodon:></legend>
+		#SET{api_ok,#ENV{mastodon_consumer_key}|et{#ENV{mastodon_consumer_secret}}}
+		#SET{api_erreur,''}
+		#SET{comptes_ok,''}
+
+		<ul class="comptes">
+			<B_comptes>
+			<li class="compte pleine_largeur">
+				<BOUCLE_comptes(POUR){tableau #CONFIG{microblog/mastodon_accounts}}>
+				[(#SET{infos_compte,[(#VAL{account/verify_credentials}|mastodon_api_call{get,#ARRAY,#ARRAY{mastodon_account,#CLE}})]})]
+				[(#GET{infos_compte/errors}|oui)#SET{api_erreur,' '}]
+				#INCLURE{fond=modeles/mastodon_user_description,account=#CLE,infos_compte=#GET{infos_compte},defaut=#CONFIG{microblog/default_account}}
+				#SET{comptes_ok,' '}
+				</BOUCLE_comptes>
+			</li>
+			</B_comptes>
+			<li class="pleine_largeur associer_mastodon_compte mastodon_conf">
+				[(#GET{comptes_ok}|non)
+				<div class="notice">
+					<:mastodon:label_aucun_compte_mastodon:>
+				]
+				<div class="action">
+				[(#BOUTON_ACTION{[(#CHEMIN_IMAGE{ajouter-16.png}|balise_img)]<:mastodon:label_associer_compte_mastodon:>,[(#URL_ACTION_AUTEUR{ajouter_mastodonaccount,new,[(#SELF|ancre_url{comptes})]})] })]
+				</div>
+				[(#GET{comptes_ok}|non)
+				</div>
+				]
+			</li>
+		</ul>
+		<style type="text/css">
+		.mastodon.user_desc {background:white;padding:10px;padding-left: 52px;margin-bottom: 1em;overflow: hidden;border:3px solid white;}
+		.mastodon.user_desc.defaut {border:3px solid #DDD;}
+		.mastodon.user_desc .name .spip_logos {float: left;margin: 0 10px 10px -42px;}
+		.mastodon.user_desc .name img {vertical-align: middle}
+		.mastodon.user_desc .name small {float: right;}
+		.mastodon.user_desc .actions {float: right}
+		.mastodon.user_desc .description p:last-child {margin-bottom: 0}
+		.associer_mastodon_compte .action {text-align: right}
+		</style>
+	</fieldset>
+	</BOUCLE_cond>
+
+	[<div class='reponse_formulaire reponse_formulaire_erreur'>
+	(#VAL{erreur}|_request|mastodon_affiche_erreur_config{#VAL{erreur_code}|_request})
+	</div>
+	#SET{api_ok,''}
+	#SET{api_erreur,' '}
+	]
+	<form method="post" action="#ENV{action}"><div>
+		#ACTION_FORMULAIRE{SELF}
+		[(#GET{api_ok}|et{#GET{api_erreur}|non}|oui)
+		<a href="#" onclick="jQuery(this).hide().closest('form').find('fieldset.api').show('fast');return false;">Modifier la configuration de l'Application Mastodon</a>
+		]
+		<fieldset class="api[(#GET{api_ok}|et{#GET{api_erreur}|non})]none">
+			<legend><:mastodon:legend_api_mastodon:></legend>
+			<p class="explication"><:mastodon:explication_mastodon_api_oauth:></p>
+			<ul class="compte">
+				<li class="editer_mastodon_consumer_key mastodon_conf[(#GET{api_erreur})erreur]">
+					<label for="mastodon_consumer_key"><:mastodon:label_mastodon_consumer_key:></label>[(#GET{api_erreur})
+					<span class='erreur_message'>Verifiez la configuration de l'application</span>
+					]<input type="text" name="mastodon_consumer_key" value="[(#ENV{mastodon_consumer_key})]" id="mastodon_consumer_key" class="text" />
+				</li>
+				<li class="editer_mastodon_consumer_secret mastodon_conf[(#GET{api_erreur})erreur]">
+					<label for="mastodon_consumer_secret"><:mastodon:label_mastodon_consumer_secret:></label>
+					<input type="text" name="mastodon_consumer_secret" value="[(#ENV{mastodon_consumer_secret}|=={#CONFIG{microblog/mastodon_consumer_secret}}|?{'',#ENV{mastodon_consumer_secret}})]" id="mastodon_consumer_secret" class="text" />
+					[<em><tt>(#CONFIG{microblog/mastodon_consumer_secret}|mastodon_masquer_secret)</tt></em>]
+				</li>
+			</ul>
+		</fieldset>
+		<fieldset>
+			<legend><:mastodon:notifications:></legend>
+			<p class="explication"><:mastodon:elements_signaler:></p>
+			<ul>
+				<li class="editer_notifications">
+					<label><:mastodon:notifications_publiques:></label>
+					<div class="choix">
+						<input type="checkbox" name="evt_forumposte" id="evt_forumposte" [
+							(#ENV{evt_forumposte}|oui)checked="checked"] />
+						<label for="evt_forumposte"><:mastodon:poster_forums:></label>
+					</div>
+					<div class="choix">
+						<input type="checkbox" name="evt_proposerarticles" id="evt_proposerarticles"[
+							(#ENV{evt_proposerarticles}|oui)checked="checked"]  />
+						<label for="evt_proposerarticles"><:mastodon:proposer_articles:></label>
+					</div>
+					<hr />
+					<div class="choix">
+						<input type="checkbox" name="evt_forumvalide" id="evt_forumvalide" [
+							(#ENV{evt_forumvalide}|oui)checked="checked"] />
+						<label for="evt_forumvalide"><:mastodon:publier_forums:></label>
+					</div>
+					<div class="choix">
+						<input type="checkbox" name="evt_publierarticles" id="evt_publierarticles"[
+							(#ENV{evt_publierarticles}|oui)checked="checked"] />
+						<label for="evt_publierarticles"><:mastodon:publier_articles:></label>
+					</div>
+					<ul class="suite[(#ENV{evt_publierarticles}|non)none]" id="evt_publierarticles_options">
+						[(#CONFIG{post_dates}|=={non}|oui)
+						#SET{name,evt_publierarticlesfutur}#SET{obli,''}#SET{defaut,'publication'}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
+						<li class="editer pleine_largeur editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
+							<span class='erreur_message'>(#GET{erreurs})</span>
+							]
+							#SET{val,validation}
+							<div class="choix">
+								<input type="radio" name="#GET{name}" class="radio" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)checked="checked"] />
+								<label for="#GET{name}_#GET{val}"><:mastodon:publier_articles_futurs_immediatement:></label>
+							</div>
+							#SET{val,publication}
+							<div class="choix">
+								<input type="radio" name="#GET{name}" class="radio" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)checked="checked"] />
+								<label for="#GET{name}_#GET{val}"><:mastodon:publier_articles_futurs_visibles:></label>
+							</div>
+						</li>
+						]
+						#SET{name,short_url}#SET{obli,''}#SET{defaut,'1'}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
+						<li class="editer pleine_largeur editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
+							<span class='erreur_message'>(#GET{erreurs})</span>
+							]
+							#SET{val,'0'}
+							<input type="hidden" name="#GET{name}" value="#GET{val}" />
+							#SET{val,1}
+							<div class="choix">
+								<input type="checkbox" name="#GET{name}" class="checkbox" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)checked="checked"] />
+								<label for="#GET{name}_#GET{val}"><:mastodon:publier_articles_shorturl:></label>
+							</div>
+						</li>
+						#SET{name,attente}#SET{obli,''}#SET{defaut,'1'}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
+						<li class="editer long_label editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+							<label for="#GET{name}"><:mastodon:publier_articles_attente:></label>[
+							<span class='erreur_message'>(#GET{erreurs})</span>
+							]<input type="text" name="#GET{name}" class="text" value="#ENV*{#GET{name},#GET{defaut}}" id="#GET{name}" [(#HTML5|et{#GET{obli}})required='required']/>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</fieldset>
+
+		<fieldset>
+			<legend><:mastodon:invite:></legend>
+			<p class="explication"><:mastodon:invite_statut_explications:></p>
+			<ul>
+				<li class="editer editer_invite">
+					<div class="choix">
+						<input type="checkbox" name="invite"[
+							(#ENV{invite}|oui)checked="checked"})] id="invite" />
+						<label for="invite"><:mastodon:invite_afficher:></label>
+					</div>
+				</li>
+			</ul>
+		</fieldset>
+
+		<p class="boutons">
+			<input type="submit" name="_cfg_ok" value="<:bouton_valider:>" class="submit" />
+		</p>
+	</div></form>
+</div>
+<style type="text/css">
+.formulaire_spip ul.suite {margin-left: 15px;}
+</style>
+<script type="text/javascript">
+	function affiche_bloc_synchro(){
+		if (jQuery("#evt_publierarticles").attr("checked"))
+			jQuery("#evt_publierarticles_options").show('fast');
+		else
+			jQuery("#evt_publierarticles_options").hide('fast');
+	}
+	jQuery(document).ready(function(){
+		jQuery("#evt_publierarticles").click(affiche_bloc_synchro);
+	});
+</script>

@@ -1,0 +1,12 @@
+[(#REM)
+
+  Squelette
+  (c) 2009 xxx
+  Distribue sous licence GPL
+
+]
+<BOUCLE_forum(FORUMS){id_forum}{statut?}{tout}>
+	#SET{url,(#VAL{'#forum '}|concat{#URL_FORUM|url_absolue})}
+	[(#SET{len,#VAL{120}|moins{#GET{url}|strlen}})]
+	[(#TITRE|concat{' | ',#TEXTE}|couper{#GET{len}}|concat{' ',#GET{url}})]
+</BOUCLE_forum>

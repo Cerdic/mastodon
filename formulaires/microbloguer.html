@@ -1,0 +1,49 @@
+[(#REM)
+
+  formulaire microbloguer
+  (c) 2009-2010 Cerdic
+  Distribue sous licence GPL
+
+]
+<div class='ajax'>
+<div class="formulaire_spip formulaire_microblog formulaire_#FORM">
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable})
+	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
+		[(#REM) declarer les hidden qui declencheront le service du formulaire
+		parametre : url d'action ]
+		#ACTION_FORMULAIRE{#ENV{action}}
+	  <ul>
+			#SET{fl,mastodon}
+	  	#SET{name,status}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}#SET{obli,'obligatoire'}
+	    <li class="editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
+				<span class='erreur_message'>(#GET{erreurs})</span>
+				]<label for="#GET{name}"><em>[(#VAL{140}|moins{#ENV{status}|strlen})]</em>[(#GET{fl}|concat{':label_',#GET{name}}|_T)]</label>
+				<textarea name="#GET{name}" id="#GET{name}" rows="3" cols="25">#ENV{status}</textarea>
+	    </li>
+	  </ul>
+	  [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+	  <!--extra-->
+	  <p class='boutons'><span class='image_loading'></span><input type='submit' class='submit' value='<:mastodon:bouton_envoyer:>' /></p>
+	</div></form>
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	]
+</div></div>
+<script type="text/javascript">/*<![CDATA[*/
+if (window.jQuery){
+	function status_length_update(me){
+		var maxlen = 140;
+		var l = jQuery(me).val();
+		l = maxlen-l.length;
+		jQuery(me).parent().find('label>em').html(l).removeClass(l>=0?'nok':'ok').addClass(l>=0?'ok':'nok');
+	}
+	function status_length_count(){
+		if (jQuery('#status').length){
+			jQuery('#status').keyup(function(){status_length_update(this);});
+			status_length_update(jQuery('#status'));
+		}
+	}
+	jQuery('document').ready(status_length_count);
+	onAjaxLoad(status_length_count);
+}
+/*]]>*/</script>
