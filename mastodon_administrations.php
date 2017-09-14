@@ -19,7 +19,7 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
  * @return array
  */
 function mastodon_declarer_tables_objets_sql($tables) {
-	$tables['spip_articles']['field']['microblog'] = "VARCHAR(140) DEFAULT '' NOT NULL";
+	$tables['spip_articles']['field']['pouet'] = "VARCHAR(500) DEFAULT '' NOT NULL";
 	
 	return $tables;
 }
@@ -34,11 +34,11 @@ function mastodon_upgrade($nom_meta_base_version,$version_cible){
 
 	$maj = array();
 	$maj['create'] = array(
-		array('sql_alter',"TABLE spip_articles ADD microblog VARCHAR(140) DEFAULT '' NOT NULL"),
+		array('sql_alter',"TABLE spip_articles ADD pouet VARCHAR(500) DEFAULT '' NOT NULL"),
 	);
 
-	$maj['0.1.1'] = array(
-		array('sql_alter',"TABLE spip_articles ADD microblog VARCHAR(140) DEFAULT '' NOT NULL"),
+	$maj['1.0.0'] = array(
+		array('sql_alter',"TABLE spip_articles ADD pouet VARCHAR(500) DEFAULT '' NOT NULL"),
 	);
 
 	include_spip('base/upgrade');
@@ -51,9 +51,7 @@ function mastodon_upgrade($nom_meta_base_version,$version_cible){
  * @param string $nom_meta_base_version
  */
 function mastodon_vider_tables($nom_meta_base_version) {
-	sql_alter("table spip_articles DROP microblog");
+	sql_alter("table spip_articles DROP pouet");
 	effacer_meta($nom_meta_base_version);
 }
 
-
-?>

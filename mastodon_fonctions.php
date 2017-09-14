@@ -10,7 +10,7 @@
 
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
-function autoriser_microbloguer_menu_dist(){
+function autoriser_pouetter_menu_dist(){
 	include_spip("inc/mastodon");
 	if (!mastodon_verifier_config())
 		return false;
@@ -41,14 +41,12 @@ function generer_url_microblog($id, $entite='article', $args='', $ancre='', $pub
  * @param array $tokens
  * @return bool|string|array
  */
-if (!function_exists("microblog_mastodon_api")){
 function microblog_mastodon_api($command,$type='get',$params=array(),$retour='',$tokens=null){
 	$options = $tokens;
 	if ($retour)
 		$options['return_type'] = $retour;
 	include_spip("inc/mastodon");
 	return mastodon_api_call($command, $type, $params, $options);
-}
 }
 
 
@@ -69,15 +67,15 @@ function filtre_mastodon_api_call_dist($command,$type='get',$params=array(),$opt
 
 
 /**
- * Afficher un tweet avec les liens (hashtag, mentions, urls)
+ * Afficher un pouet avec les liens (hashtag, mentions, urls)
  * @param string $texte
  * @param bool|false $is_backend
  * @return string
  */
-function mastodon_joli_tweet($texte,$is_backend=false){
+function mastodon_joli_pouet($texte,$is_backend=false){
 	defined('_EXTRAIRE_TW_LIENS') || define('_EXTRAIRE_TW_LIENS', ',' . '\[[^\[\]]*(?:<-|->).*?\]' . '|<a\b.*?</a\b' . '|<\w.*?>' . '|((?:https?:/|www\.)[^"\'\s\[\]\}\)<>]*)' .',imsS');
 
-	// si c'est un tweet qui vient du flux RSS il commence par le mastodon user qu'on enleve
+	// si c'est un pouet qui vient du flux RSS il commence par le mastodon user qu'on enleve
 	if ($is_backend){
 		$texte = preg_replace(",^\w+:\s,","",$texte);
 	}
@@ -86,7 +84,7 @@ function mastodon_joli_tweet($texte,$is_backend=false){
 	$texte = preg_replace_callback(_EXTRAIRE_TW_LIENS,"mastodon_filtre_autolinks",$texte);
 	// les liens vers les compte
 	if (strpos($texte,"@")!==false){
-		$texte = preg_replace_callback(",(@\w+)\b(?!…),u","mastodon_filtre_user_link",$texte);
+		$texte = preg_replace_callback(",(@\w+@\w+\.\w+)\b(?!…),u","mastodon_filtre_user_link",$texte);
 	}
 	if (strpos($texte,"#")!==false){
 		$texte = preg_replace_callback(",(#\w+)\b(?!…),u", "mastodon_filtre_hash_link", $texte);
@@ -103,7 +101,10 @@ function mastodon_joli_tweet($texte,$is_backend=false){
 function mastodon_filtre_user_link($m){
 	$user = reset($m);
 	$user = ltrim($user,"@");
-	$user = "<a href=\"https://mastodon.com/$user\" target='_blank'>@$user</a>";
+	$user = explode('@', $user);
+	$host = end($user);
+	$user = reset($user);
+	$user = "<a href=\"https://$host/@$user\" target='_blank'>@$user</a>";
 	return $user;
 }
 
@@ -122,7 +123,7 @@ function mastodon_filtre_hash_link($m){
 }
 
 /**
- * Remplacer l'URL short du tweet par un lien vers l'URL short mais en affichant une version lisible
+ * Remplacer l'URL short du pouet par un lien vers l'URL short mais en affichant une version lisible
  * de la vrai URL
  *
  * @param $m
