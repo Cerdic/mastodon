@@ -154,64 +154,66 @@ function mastodon_oauth_load_registered_app($user_name = '') {
 
 /**
  * Envoyer un message sur Mastodon
- * @param $status
- * @param null $tokens
- *   permet d'utiliser des tokens specifiques et pas ceux pre-configures
- *   (voir mastodon_connect)
+ * @param string $status
+ * @param array $options
+ *   string $user_name permet d'utiliser un user_name specifique
+ *   int $max_len longueur maxi des messages
+ *   string $visibility public|unlisted|private|direct
+ *
  * @return bool|string
  */
-function tweet($status, $tokens = null){
+function pouet($status, $options = array()){
 	// Certains define prennent le pas sur le reste (mode TEST)
 	if (defined('_TEST_MICROBLOG_SERVICE')) {
 		if (_TEST_MICROBLOG_SERVICE == '') {
-			spip_log('microblog desactive par _TEST_MICROBLOG_SERVICE',"mastodon"._LOG_INFO_IMPORTANTE);
+			spip_log('pouet() desactive par _TEST_MICROBLOG_SERVICE',"mastodon"._LOG_INFO_IMPORTANTE);
 			return false;
 		}
 	}
 
-	/**
-	 * Si l'API utilisée est mastodon, on force le passage en oAuth
-	 */
-	$oAuthConnection = mastodon_connect($tokens);
+	$default_options = array(
+		'user_name' => '',
+		'max_len' => 500,
+		'visibility' => 'unlisted',//'public',
+	);
+	$options = array_merge($default_options, $options);
 
 	// si pas d'api utilisable on sort
-	if (!$oAuthConnection)
+	if (!$user = mastodon_oauth_user_token($options['user_name'])
+	  or !$app = mastodon_oauth_load_registered_app(reset($user)))
 		return false;
-	
-	// Preparer le message (utf8 < 140 caracteres)
+
+	$max_len = $options['max_len'];
+	// Preparer le message (utf8 < 500 caracteres)
 	include_spip('inc/charsets');
 	$status = trim(preg_replace(',\s+,', ' ', $status));
 	$status = unicode2charset(charset2unicode($status), 'utf-8');
-	$status = substr($status, 0, 140);
+	$status = substr($status, 0, $max_len);
 
 	if (!strlen($status)) {
-		spip_log('Rien a bloguer','mastodon');
+		spip_log('Rien a pouetter','mastodon');
 		return false;
 	}
 
-	$datas = array('status' => $status);
-
 	// anti-begaiment
-	$begaie = md5(serialize(array($tokens,$status)));
+	$begaie = md5(serialize(array($user,$status)));
 	if ($begaie == $GLOBALS['meta']['mastodon_begaie']) {
 		spip_log("begaie $status", 'mastodon'._LOG_INFO_IMPORTANTE);
 		return false;
 	}
 
-	// ping et renvoyer la reponse xml
-	$ret = 'ok';
-	$api = 'statuses/update';
-	$oAuthConnection->post($api,$datas);
-	if (200 != $oAuthConnection->http_code){
-		spip_log('Erreur '.$oAuthConnection->http_code,'mastodon');
-		$ret = false;
+	$res = $app->postStatus($status, $options['visibility']);
+
+	if (!$res){
+		spip_log('Erreur pouet() : ' . var_export($res, true), 'mastodon'._LOG_ERREUR);
+		$res = false;
 	}
 
 	// noter l'envoi pour ne pas mastodon 2 fois de suite la meme chose
-	if ($ret)
+	if ($res)
 		ecrire_meta('mastodon_begaie', $begaie);
 
-	return $ret;
+	return $res;
 }
 
 /**

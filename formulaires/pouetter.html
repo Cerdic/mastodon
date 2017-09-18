@@ -6,20 +6,18 @@
 
 ]
 <div class='ajax'>
-<div class="formulaire_spip formulaire_microblog formulaire_#FORM">
+<div class="formulaire_spip formulaire_#FORM">
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 	[(#ENV{editable})
 	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
-		[(#REM) declarer les hidden qui declencheront le service du formulaire
-		parametre : url d'action ]
 		#ACTION_FORMULAIRE{#ENV{action}}
-	  <ul>
+	  <ul class="editer-groupe">
 			#SET{fl,mastodon}
 	  	#SET{name,status}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}#SET{obli,'obligatoire'}
-	    <li class="editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
+	    <li class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
 				<span class='erreur_message'>(#GET{erreurs})</span>
-				]<label for="#GET{name}"><em>[(#VAL{140}|moins{#ENV{status}|strlen})]</em>[(#GET{fl}|concat{':label_',#GET{name}}|_T)]</label>
-				<textarea name="#GET{name}" id="#GET{name}" rows="3" cols="25">#ENV{status}</textarea>
+				]<label for="#GET{name}">[(#GET{fl}|concat{':label_',#GET{name}}|_T)] <em>[(#ENV{_max_len}|moins{#ENV{status}|strlen})]</em></label>
+				<textarea name="#GET{name}" id="#GET{name}" rows="10" cols="25">#ENV{status}</textarea>
 	    </li>
 	  </ul>
 	  [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
@@ -32,7 +30,7 @@
 <script type="text/javascript">/*<![CDATA[*/
 if (window.jQuery){
 	function status_length_update(me){
-		var maxlen = 140;
+		var maxlen = #ENV{_max_len};
 		var l = jQuery(me).val();
 		l = maxlen-l.length;
 		jQuery(me).parent().find('label>em').html(l).removeClass(l>=0?'nok':'ok').addClass(l>=0?'ok':'nok');

@@ -27,7 +27,7 @@
 	<pipeline nom="taches_generales_cron" inclure="genie/mastodon.php" />
 	<pipeline nom="afficher_complement_objet" inclure="mastodon_pipelines.php" />
 
-	<menu nom="pouetter" titre="mastodon:titre_microblog" parent="menu_publication" icone="images/mastodon-16.png" />
+	<menu nom="pouetter" titre="mastodon:titre_mastodon" parent="menu_publication" icone="images/mastodon-16.png" />
 
 </paquet>
         

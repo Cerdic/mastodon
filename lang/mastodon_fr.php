@@ -7,7 +7,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'article' => 'article',
 
 	// B
-	'bouton_envoyer' => 'Envoyer',
+	'bouton_envoyer' => 'Pouet',
 	'bouton_envoyer_maintenant' => 'Envoyer maintenant',
 	'bouton_ne_pas_bloguer' => 'Ne rien envoyer',
 	'bouton_preferer_compte' => 'Utiliser ce compte par défaut',
@@ -22,9 +22,8 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'elements_signaler' => 'Envoyer un message avec le compte par défaut lors des événements ci-dessous.',
 	'erreur_verifier_configuration' => 'Il y a une erreur, veuillez v&eacute;rifiez la configuration.',
 	'erreur_connexion_compte' => 'Impossible de se connecter avec le compte @account@.',
-	'erreur_envoi_desactive' => 'L\'envoi de Tweet est desactivé par la constante <tt>_TEST_MICROBLOG_SERVICE</tt>',
-	'erreur_config_pour_widget' => 'Configurer l\'Application Mastodon et ajouter un compte Mastodon pour utiliser les Widgets',
-	'erreur_config_pour_tweeter' => 'Configurer le plugin pour envoyer un message.',
+	'erreur_envoi_desactive' => 'L\'envoi de Pouet est desactivé par la constante <tt>_TEST_MICROBLOG_SERVICE</tt>',
+	'erreur_config_pour_pouetter' => 'Configurer le plugin pour envoyer un message.',
 	'erreur_creation_application' => 'Erreur lors de la création de l\'application',
 
 	// I
@@ -38,7 +37,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'label_aucun_compte_mastodon' => 'Aucun compte Mastodon enregistré.',
 	'label_dissocier_compte_mastodon' => 'Supprimer ce compte',
 	'label_host_ajouter' => 'Instance Mastodon',
-	'label_status' => 'Quoi de neuf ?',
+	'label_status' => 'Qu\'avez-vous en tête ?',
 	'label_microblog'=> 'Modifier le message',
 	'label_username' => 'Nom d\'utilisateur',
 	'legend_api_mastodon' => 'Application Mastodon',
@@ -47,7 +46,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'longueur_maxi_status' => 'Le message doit comporter au maximum 140 caract&egrave;res',
 
 	// M
-	'message_envoye'=> 'Tweet&nbsp;:',
+	'message_envoye'=> 'Pouet&nbsp;:',
 
 	// P
 	'presentation_laconica' => 'le site public du logiciel laconi.ca',
@@ -77,35 +76,4 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'titre_configurer_mastodon' => 'Configurer Mastodon',
 	'titre_configurer_mastodon_app' => 'Application &amp; Comptes',
 
-
-	'explication_commun_widgets' => "Configuration Nécessaire à l'utilisation du plugin Twitdget. Partie commune entre le widget profil et le widget recherche",
-	'explication_recherche_widget' => "Configuration pour le widget de recherche",
-	'explication_profil_widget' => "Configuration Nécessaire à l'utilisation du widget profil ",
-
-	'label_search' => "Recherche. Terme recherché, l'usage de tweeter implique souvent de précéder le terme par un # ",
-	'label_interval' => "Delai entre le défilement de chaque tweet (ms)",
-	'label_subject' => "Sujet de la fenêtre tweete",
-	'label_title' => "Titre de la fenêtre",
-	'label_footer' => "Texte du footer",
-	'label_width' => "Largeur de la fenêtre",
-	'label_height' => "Hauteur de la fenêtre",
-	'label_shell_background' => "Couleur de fond de la fenêtre tweeter",
-	'label_shell_color' => "Couleur du texte",
-	'label_tweets_background' => "Couleur fond tweet",
-	'label_tweets_color' => "Couleur de texte des tweet",
-	'label_tweets_link' => "Couleur des liens",
-	'label_rpp' => "Nombre de résultats par page",
-	'label_user' => "Utilisateur mastodon (ne pas précéder du @)",
-
-	'legend_commun_widgets' => "Configuration Commune",
-	'legend_recherche_widget' => "Widget Recherche",
-	'legend_profil_widget' => "Widget Profil",
-
-
-	// T
-	'titre_configurer_widget' => "Mastodon Widgets",
-	'titre_twidget' => "Twidget",
-
 );
-
-?>

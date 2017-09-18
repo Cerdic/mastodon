@@ -15,19 +15,17 @@
 #HTTP_HEADER{Vary: Accept-Encoding}[(#REM)<style>
 ]
 
-#SET{claire,##ENV{couleur_claire,edf3fe}}
-#SET{foncee,##ENV{couleur_foncee,3874b0}}
-#SET{left,#ENV{ltr}|choixsiegal{left,left,right}}
-#SET{right,#ENV{ltr}|choixsiegal{left,right,left}}
 
 /*.cadre-e { background: #DBEFFA; border-color: #33CCFF; }*/
 
-.formulaire_spip.formulaire_microblog { background: #61bdd5 url(#CHEMIN{prive/themes/spip/images/microblog-bg.jpg}) no-repeat center bottom; border-color: #61bdd5; }
-.formulaire_spip.formulaire_microblog ul { background: url(#CHEMIN{prive/themes/spip/images/mastodon-64.png}) no-repeat 32px bottom; }
-.formulaire_spip.formulaire_microblog .boutons { padding-top: 0; background: none; border: 0; }
+.formulaire_spip.formulaire_pouetter { background: #3088d4; border-color: #3088d4; }
+.formulaire_spip.formulaire_pouetter .editer-groupe { background: url(#CHEMIN{prive/themes/spip/images/mastodon-64.png}) no-repeat left bottom; }
+.formulaire_spip.formulaire_pouetter .boutons { padding-top: 0; background: none; border: 0; }
+.formulaire_spip.formulaire_pouetter .boutons .submit {background: #fff;font-weight: bold}
+.formulaire_spip.formulaire_pouetter .boutons .submit:hover {color:#3088d4;font-weight: bold}
 
-.formulaire_microblog li label em {display:block;float:right;font-size:1.3em;font-style:normal;font-weight:bold;color:green;}
-.formulaire_microblog li label em.nok {color:red;}
+.formulaire_pouetter .editer label em {display:block;font-size:1.3em;font-style:normal;font-weight:bold;color:#eee;}
+.formulaire_pouetter .editer label em.nok {color:#a21c1c;}
 
 .formulaire_editer_microblog .titrem.status {background: none;margin-bottom:0.5em}
 .formulaire_editer_microblog .titrem.status .small {font-weight: normal}

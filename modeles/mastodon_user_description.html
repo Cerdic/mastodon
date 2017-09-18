@@ -2,9 +2,12 @@
 [(#ENV{infos_compte/url}|oui)
 <div class="mastodon user_desc[(#GET{is_defaut})defaut]">
 	<div class="name">
+		[(#ENV{infos_compte/locked}|oui)
+		[(#CHEMIN_IMAGE{cadenas-16.png}|balise_img{prive})]
+		]
 		<strong><img src="#ENV{infos_compte/avatar_static}" class="spip_logos" width="32" height="32"/><a
 			href="[(#ENV{infos_compte/url})]">[(#ENV{infos_compte}|mastodon_user_full_screen_name)]</a></strong>
-		\(#ENV{infos_compte/display_name}\)
+		[\((#ENV{infos_compte/display_name})\)]
 		[(#GET{is_defaut}|oui)
 		#SET{fonction,<code><tt>pouet()</tt></code>}
 		<small><:mastodon:compte_defaut{fonction=#GET{fonction}}:></small>
