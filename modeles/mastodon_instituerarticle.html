@@ -1,11 +1,13 @@
 <BOUCLE_art(ARTICLES){id_article=#ENV{id_objet,#ENV{id_article}}}{statut?}{tout}>
-	[(#MICROBLOG)]
-	[(#MICROBLOG|non)
+	[(#POUET)]
+	[(#POUET|non)
 		[(#SET{url,[(#ID_ARTICLE|generer_url_microblog{article,'','',#STATUT|=={publie}|?{#EVAL{true}}})]})]
 		[(#SET{len,
-		#VAL{120}|moins{#GET{url}|strlen}
-		})]
-		[(#TITRE|textebrut|couper{#GET{len}}|concat{' ',#GET{url}}
+		#VAL{480}|moins{#GET{url}|strlen}
+		})]#SET{titre,#TITRE|textebrut|couper{#GET{len}}}
+		[(#GET{titre}|concat{'
+',#INTRODUCTION|couper{#GET{len}|moins{#GET{titre}|strlen}},'
+',#GET{url}}
 			|replace{&nbsp;,' '})]
 	]
 </BOUCLE_art>

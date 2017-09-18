@@ -29,6 +29,7 @@ function formulaires_editer_pouet_charger_dist($objet,$id_objet,$hide_form=false
 		$valeurs['editable'] = false;
 		$valeurs['message_erreur'] = _T('mastodon:erreur_config_pour_tweeter');
 	}
+	$valeurs['_max_len'] = 500;
 
 	return $valeurs;
 }
