@@ -1,12 +1,12 @@
 [(#REM)
 
-  formulaire microbloguer
+  formulaire pouetuer
   (c) 2009-2010 Cerdic
   Distribue sous licence GPL
 
 ]
 [<div class="ajax">
-	<div class="formulaire_spip formulaire_microblog formulaire_#FORM" id="formulaire_#FORM-#OBJET-#ID_OBJET">
+	<div class="formulaire_spip formulaire_pouetter formulaire_#FORM" id="formulaire_#FORM-#OBJET-#ID_OBJET">
 		[<h3 class="titrem status">[(#CHEMIN_IMAGE{mastodon-24.png}|balise_img{'',cadre-icone})]<strong><:mastodon:message_envoye:></strong> <q class="small">(#ENV*{_status})</q></h3>]
 		[(#ENV{_hide}|oui)
 		<span class="toggle_box_link">\[<a href="#" onclick="jQuery(this).parent().hide().next('.edition').show('fast');return false;">Modifier</a>\]</span>
@@ -17,12 +17,12 @@
 		<input type='submit' class='submit' name="enregistrer" value='<:bouton_enregistrer:>' style="display:none;"/>
 		<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
 			#ACTION_FORMULAIRE{#ENV{action}}
-			<ul>
+			<ul class="editer-groupe">
 				#SET{fl,mastodon}
-				#SET{name,microblog}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}#SET{obli,'obligatoire'}
-				<li class="editer_[(#GET{name})] pleine_largeur[ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
+				#SET{name,pouet}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}#SET{obli,'obligatoire'}
+				<li class="editer editer_[(#GET{name})] pleine_largeur[ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
 					<span class='erreur_message'>(#GET{erreurs})</span>
-					]<label for="#GET{name}"><em>[(#VAL{140}|moins{#ENV*{#GET{name}}|strlen})]</em>[(#GET{fl}|concat{':label_',#GET{name}}|_T)]</label>
+					]<label for="#GET{name}">[(#GET{fl}|concat{':label_',#GET{name}}|_T)]<em>[(#ENV{_max_len}|moins{#ENV*{#GET{name}}|strlen})]</em></label>
 					<textarea name="#GET{name}" id="#GET{name}" rows="3" cols="25">#ENV*{#GET{name}}</textarea>
 				</li>
 			</ul>
@@ -31,7 +31,7 @@
 			<p class='boutons'>
 				<span class='image_loading'></span>
 				<input type='submit' class='submit' name="envoyer" value='<:mastodon:bouton_envoyer_maintenant:>' />
-				<input type="submit" name="annuler_microblog" value="<:mastodon:bouton_ne_pas_bloguer:>" />
+				<input type="submit" name="annuler_pouet" value="<:mastodon:bouton_ne_pas_bloguer:>" />
 				<input type='submit' class='submit' name="enregistrer" value='<:bouton_enregistrer:>' />
 			</p>
 		</div></form>
@@ -43,15 +43,15 @@
 <script type="text/javascript">/*<![CDATA[*/
 if (window.jQuery){
 	function status_length_update(me){
-		var maxlen = 140;
+		var maxlen = #ENV{_max_len};
 		var l = jQuery(me).val();
 		l = maxlen-l.length;
 		jQuery(me).parent().find('label>em').html(l).removeClass(l>=0?'nok':'ok').addClass(l>=0?'ok':'nok');
 	}
 	function status_length_count(){
-		if (jQuery('#microblog').length){
-			jQuery('#microblog').keyup(function(){status_length_update(this);});
-			status_length_update(jQuery('#microblog'));
+		if (jQuery('#pouet').length){
+			jQuery('#pouet').keyup(function(){status_length_update(this);});
+			status_length_update(jQuery('#pouet'));
 		}
 	}
 	jQuery('document').ready(status_length_count);
