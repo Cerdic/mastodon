@@ -21,8 +21,6 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// E
 	'elements_signaler' => 'Elements to report to the public flow',
 	'erreur_verifier_configuration' => 'An error occures, please check the configuration.',
-	'explication_mastodon_api_oauth' => 'Create a Mastodon Application <a href="http://dev.mastodon.com/apps/new">in developper area (http://dev.mastodon.com/apps/new)</a>.
-Enter the provided data and save the configuration (<a href="https://contrib.spip.net/4394">Plus d\'aide</a>).',
 	'erreur_connexion_compte' => 'Unable to connect with @account@ account.',
 	'erreur_envoi_desactive' => 'Tweet sending is de-activated due to <tt>_TEST_MICROBLOG_SERVICE</tt> constant',
 	'erreur_config_pour_widget' => 'Configure Mastodon Application and add an account to use Widgets.',
@@ -39,8 +37,6 @@ Enter the provided data and save the configuration (<a href="https://contrib.spi
 	'label_aucun_compte_mastodon' => 'Aucun compte Mastodon enregistré.',
 	'label_dissocier_compte_mastodon' => 'Delete this account',
 	'label_status' => 'What\'s new ?',
-	'label_mastodon_consumer_key' => 'API key of the Mastodon API',
-	'label_mastodon_consumer_secret' => 'API secret of the Mastodon API',
 	'label_microblog'=> 'Edit the message',
 	'label_username' => 'User name',
 	'legend_api_mastodon' => 'Mastodon Application',
@@ -75,8 +71,8 @@ Enter the provided data and save the configuration (<a href="https://contrib.spi
 	'service' => 'Service',
 
 	// T
-	'titre_microblog' => 'Mastodon',
-	'titre_configurer_microblog' => 'Mastodon Configuration',
+	'titre_mastodon' => 'Mastodon',
+	'titre_configurer_mastodon' => 'Mastodon Configuration',
 	'titre_configurer_mastodon_app' => 'Application &amp; Accounts',
 
 

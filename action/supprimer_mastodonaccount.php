@@ -25,17 +25,20 @@ function action_supprimer_mastodonaccount_dist($account = null) {
 	include_spip("inc/autoriser");
 	if(autoriser("supprimer","mastodonaccount",$account)){
 
-		$cfg = @unserialize($GLOBALS['meta']['microblog']);
-		if (isset($cfg['mastodon_accounts'][$account])){
-			unset($cfg['mastodon_accounts'][$account]);
-			if (!isset($cfg['default_account'])
-			  OR !isset($cfg['mastodon_accounts'][$cfg['default_account']])){
-				$accounts = array_keys($cfg['mastodon_accounts']);
-				$cfg['default_account'] = reset($accounts);
-			}
+		include_spip("inc/config");
+		include_spip("inc/mastodon");
 
-			ecrire_meta("microblog", serialize($cfg));
+		effacer_config('mastodon/accounts/'.$account);
+
+		$default = lire_config('mastodon/default_account');
+		if (!$default or !lire_config('mastodon/accounts/' . $default)) {
+			$accounts = lire_config('mastodon/accounts');
+			if (count($accounts)) {
+				$default = array_keys($accounts);
+				$default = reset($default);
+				ecrire_config($default);
+			}
 		}
 	}
 }
-?>
+

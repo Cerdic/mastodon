@@ -25,12 +25,11 @@ function action_preferer_mastodonaccount_dist($account = null) {
 	include_spip("inc/autoriser");
 	if(autoriser("preferer","mastodonaccount",$account)){
 
-		$cfg = @unserialize($GLOBALS['meta']['microblog']);
-		if (isset($cfg['mastodon_accounts'][$account])){
-			$cfg['default_account'] = $account;
-
-			ecrire_meta("microblog", serialize($cfg));
+		include_spip("inc/config");
+		include_spip("inc/mastodon");
+		if (mastodon_oauth_user_token($account)) {
+			ecrire_config('mastodon/default_account', $account);
 		}
 	}
 }
-?>
+

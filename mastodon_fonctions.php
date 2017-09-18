@@ -17,6 +17,18 @@ function autoriser_pouetter_menu_dist(){
 	return true;
 }
 
+/**
+ * Retrouver le screen name complet a partir des users infos de l'API
+ * @param $user_infos
+ * @return string
+ */
+function mastodon_user_full_screen_name($user_infos) {
+	$screen_name = '@' . $user_infos['username'];
+	$host = parse_url($user_infos['url'], PHP_URL_HOST);
+	$screen_name .= '@' . $host;
+	return $screen_name;
+}
+
 function generer_url_microblog($id, $entite='article', $args='', $ancre='', $public=true, $type=null){
 	include_spip('inc/filtres_mini');
 	$config = unserialize($GLOBALS['meta']['microblog']);

@@ -1,23 +1,20 @@
 #SET{is_defaut,#ENV{account}|=={#ENV{defaut}}|oui}
-[(#ENV{infos_compte/screen_name}|oui)
+[(#ENV{infos_compte/url}|oui)
 <div class="mastodon user_desc[(#GET{is_defaut})defaut]">
 	<div class="name">
-		[(#ENV{infos_compte/protected}|oui)
-		[(#CHEMIN_IMAGE{cadenas-16.png}|balise_img{prive})]
-		]
-		<strong><img src="#ENV{infos_compte/profile_image_url}" class="spip_logos" width="32" height="32"/><a
-			href="[http://mastodon.com/(#ENV{infos_compte/screen_name})]">@#ENV{infos_compte/screen_name}</a></strong>
-		\(#ENV{infos_compte/name}\)
+		<strong><img src="#ENV{infos_compte/avatar_static}" class="spip_logos" width="32" height="32"/><a
+			href="[(#ENV{infos_compte/url})]">[(#ENV{infos_compte}|mastodon_user_full_screen_name)]</a></strong>
+		\(#ENV{infos_compte/display_name}\)
 		[(#GET{is_defaut}|oui)
-		#SET{fonction,<code><tt>tweet()</tt></code>}
+		#SET{fonction,<code><tt>pouet()</tt></code>}
 		<small><:mastodon:compte_defaut{fonction=#GET{fonction}}:></small>
 		]
 	</div>
 	<div class="description">
-		[(#ENV{infos_compte/description}|propre)]
+		[(#ENV*{infos_compte/note}|propre)]
 	</div>
 ]
-[(#ENV{infos_compte/screen_name}|non)
+[(#ENV{infos_compte/url}|non)
 <div class="notice">
 	#SET{is_defaut,' '}
 	[(#SET{screen_name,[@(#ENV{account}|sinon{'???'})]})]

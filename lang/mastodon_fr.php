@@ -21,12 +21,11 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	// E
 	'elements_signaler' => 'Envoyer un message avec le compte par défaut lors des événements ci-dessous.',
 	'erreur_verifier_configuration' => 'Il y a une erreur, veuillez v&eacute;rifiez la configuration.',
-	'explication_mastodon_api_oauth' => 'Créez une application Mastodon <a href="http://dev.mastodon.com/apps/new">dans l\'espace développeurs (http://dev.mastodon.com/apps/new)</a>.
-Entrez ci-dessous les clés d\'identification et enregistrez (<a href="https://contrib.spip.net/4394">Plus d\'aide</a>).',
 	'erreur_connexion_compte' => 'Impossible de se connecter avec le compte @account@.',
 	'erreur_envoi_desactive' => 'L\'envoi de Tweet est desactivé par la constante <tt>_TEST_MICROBLOG_SERVICE</tt>',
 	'erreur_config_pour_widget' => 'Configurer l\'Application Mastodon et ajouter un compte Mastodon pour utiliser les Widgets',
 	'erreur_config_pour_tweeter' => 'Configurer le plugin pour envoyer un message.',
+	'erreur_creation_application' => 'Erreur lors de la création de l\'application',
 
 	// I
 	'invite' => 'Invite',
@@ -35,12 +34,11 @@ Entrez ci-dessous les clés d\'identification et enregistrez (<a href="https://c
 	'invite_afficher' => 'Afficher l\'invite de statut',
 
 	// L
-	'label_associer_compte_mastodon' => 'Ajouter un compte Mastodon',
+	'label_associer_compte_mastodon' => 'Ajouter un compte',
 	'label_aucun_compte_mastodon' => 'Aucun compte Mastodon enregistré.',
 	'label_dissocier_compte_mastodon' => 'Supprimer ce compte',
+	'label_host_ajouter' => 'Instance Mastodon',
 	'label_status' => 'Quoi de neuf ?',
-	'label_mastodon_consumer_key' => 'Cl&eacute; cliente (<em>API key</em>)',
-	'label_mastodon_consumer_secret' => 'Cl&eacute; secr&#232;te (<em>API secret</em>)',
 	'label_microblog'=> 'Modifier le message',
 	'label_username' => 'Nom d\'utilisateur',
 	'legend_api_mastodon' => 'Application Mastodon',
@@ -75,8 +73,8 @@ Entrez ci-dessous les clés d\'identification et enregistrez (<a href="https://c
 	'service' => 'Service',
 
 	// T
-	'titre_microblog' => 'Mastodon',
-	'titre_configurer_microblog' => 'Configurer Mastodon',
+	'titre_mastodon' => 'Mastodon',
+	'titre_configurer_mastodon' => 'Configurer Mastodon',
 	'titre_configurer_mastodon_app' => 'Application &amp; Comptes',
 
 
