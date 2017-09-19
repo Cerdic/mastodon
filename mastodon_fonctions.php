@@ -29,9 +29,20 @@ function mastodon_user_full_screen_name($user_infos) {
 	return $screen_name;
 }
 
-function generer_url_microblog($id, $entite='article', $args='', $ancre='', $public=true, $type=null){
+
+/**
+ * Generer une URL courte pour les articles, si l'option est activee dans la configuration du plugin mastodon
+ * @param int $id
+ * @param string $entite
+ * @param string $args
+ * @param string $ancre
+ * @param bool $public
+ * @param null $type
+ * @return string
+ */
+function generer_url_racourcie($id, $entite='article', $args='', $ancre='', $public=true, $type=null){
 	include_spip('inc/filtres_mini');
-	$config = unserialize($GLOBALS['meta']['microblog']);
+	$config = unserialize($GLOBALS['meta']['mastodon']);
 
 	if (!$public
 	 OR $entite!=='article'

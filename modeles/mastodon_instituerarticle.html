@@ -1,7 +1,7 @@
 <BOUCLE_art(ARTICLES){id_article=#ENV{id_objet,#ENV{id_article}}}{statut?}{tout}>
 	[(#POUET)]
 	[(#POUET|non)
-		[(#SET{url,[(#ID_ARTICLE|generer_url_microblog{article,'','',#STATUT|=={publie}|?{#EVAL{true}}})]})]
+		[(#SET{url,[(#ID_ARTICLE|generer_url_racourcie{article,'','',#STATUT|=={publie}|?{#EVAL{true}}})]})]
 		[(#SET{len,
 		#VAL{480}|moins{#GET{url}|strlen}
 		})][(#TITRE|textebrut|concat{'
