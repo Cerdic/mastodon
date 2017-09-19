@@ -37,15 +37,8 @@ function mastodon_oauth_load_app($domain) {
 
 	$tootoPHP = new TootoPHP\TootoPHP($domain, $dir_credentials);
 
-	// Setting up your App name and your website
-	if (!function_exists('textebrut')) {
-		include_spip('inc/filtres');
-	}
-	$app_name = textebrut($GLOBALS['meta']['nom_site']);
-	$app_name = preg_replace(',[^\w]+,',' ', $app_name);
-	$app_name = ucwords($app_name);
-	$app_name = "Spip" . str_replace(' ', '', $app_name);
-
+	// App name and website
+	$app_name = "SpipToMastodon";
 	try {
 		$app = $tootoPHP->registerApp($app_name, $GLOBALS['meta']['adresse_site'], $redirect_authorize);
 	}
