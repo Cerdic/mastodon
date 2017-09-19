@@ -12,7 +12,7 @@
 		<span class="toggle_box_link">\[<a href="#" onclick="jQuery(this).parent().hide().next('.edition').show('fast');return false;">Modifier</a>\]</span>
 		]
 		<div class="edition [(#ENV{_hide})none]">
-		[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+		[<div class="reponse_formulaire reponse_formulaire_erreur p">(#ENV*{message_erreur})</div>]
 		(#ENV{editable})
 		<input type='submit' class='submit' name="enregistrer" value='<:bouton_enregistrer:>' style="display:none;"/>
 		<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
@@ -35,7 +35,7 @@
 				<input type='submit' class='submit' name="enregistrer" value='<:bouton_enregistrer:>' />
 			</p>
 		</div></form>
-		[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+		[<div class="reponse_formulaire reponse_formulaire_ok p">(#ENV*{message_ok})</div>]
 		</div>
 	</div>
 </div>

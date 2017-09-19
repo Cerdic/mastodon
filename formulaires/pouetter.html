@@ -7,7 +7,7 @@
 ]
 <div class='ajax'>
 <div class="formulaire_spip formulaire_#FORM">
-	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[<div class="reponse_formulaire reponse_formulaire_erreur p">(#ENV*{message_erreur})</div>]
 	[(#ENV{editable})
 	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
 		#ACTION_FORMULAIRE{#ENV{action}}
@@ -24,7 +24,7 @@
 	  <!--extra-->
 	  <p class='boutons'><span class='image_loading'></span><input type='submit' class='submit' value='<:mastodon:bouton_envoyer:>' /></p>
 	</div></form>
-	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<div class="reponse_formulaire reponse_formulaire_ok p">(#ENV*{message_ok})</div>]
 	]
 </div></div>
 <script type="text/javascript">/*<![CDATA[*/

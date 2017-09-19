@@ -19,9 +19,9 @@ function formulaires_editer_pouet_charger_dist($objet,$id_objet,$hide_form=false
 
 	$valeurs = array();
 	$valeurs['_hide'] = (($hide_form AND is_null(_request('pouet')))?' ':'');
-	$valeurs['objet']=$objet;
-	$valeurs['id_objet']=$id_objet;
-	$valeurs['pouet'] = recuperer_fond("modeles/mastodon_instituer".$objet,array($primary=>$id_objet));
+	$valeurs['objet'] = $objet;
+	$valeurs['id_objet'] = $id_objet;
+	$valeurs['pouet'] = recuperer_fond("modeles/mastodon_instituer" . $objet, array($primary => $id_objet));
 	$valeurs['_status'] = trim($valeurs['pouet']);
 
 	include_spip("inc/mastodon");
@@ -60,29 +60,40 @@ function formulaires_editer_pouet_verifier_dist($objet,$id_objet){
  * on affiche un message explicitant qu'il y a une erreur dans la configuration
  */
 function formulaires_editer_pouet_traiter_dist($objet,$id_objet){
-	$res = array('editable'=>true);
+	$res = array(
+		'editable'=>true
+	);
+
 	$pouet = _request('pouet');
-	if (_request('annuler_pouet'))
+
+	if (_request('annuler_pouet')) {
 		$pouet = " ";// ruse pour ne rien envoyer
-	if (!is_null($pouet)){
-		$set = array('pouet'=>$pouet);
-		if (include_spip('action/editer_objet')
-		  AND function_exists('objet_modifier'))
-			objet_modifier($objet, $id_objet, $set);
-		elseif(include_spip('inc/modifier')
-		  AND function_exists($f="revision_$objet"))
-			$f($id_objet, $set);
 	}
-	if (!strlen(trim($pouet)))
+
+	if (!is_null($pouet)){
+		$set = array('pouet' => $pouet);
+		include_spip('action/editer_objet');
+		objet_modifier($objet, $id_objet, $set);
+	}
+
+	if (!strlen(trim($pouet))) {
 		set_request('pouet');
+	}
 
 	if (_request('envoyer')){
-		include_spip('inc/pouet');
+		include_spip('inc/mastodon');
 		$primary = id_table_objet($objet);
-		$status = recuperer_fond("modeles/mastodon_instituer".$objet,array($primary=>$id_objet));
+		$status = recuperer_fond("modeles/mastodon_instituer" . $objet, array($primary => $id_objet));
 		$retour = pouet($status);
-		if($retour){
-			$res['message_ok']=_T('mastodon:message_envoye')." ".$status;
+
+		if($retour and isset($retour['id']) and $retour['id']){
+			if (isset($retour['content'])) {
+				$status = $retour['content'];
+			}
+			else {
+				$status = nl2br($status);
+			}
+			$res['message_ok']=_T('mastodon:message_envoye') . " <blockquote>$status</blockquote>";
 		}
 		else{
 			$res['message_erreur']=_T('mastodon:erreur_verifier_configuration');
@@ -92,4 +103,3 @@ function formulaires_editer_pouet_traiter_dist($objet,$id_objet){
 	return $res;
 }
 
-?>

@@ -8,7 +8,9 @@
  *
  */
 
-if (!defined("_ECRIRE_INC_VERSION")) return;
+if (!defined("_ECRIRE_INC_VERSION")){
+	return;
+}
 
 /**
  * Fonction de chargement des valeurs par defaut des champs du formulaire
@@ -29,51 +31,58 @@ function formulaires_pouetter_charger_dist(){
 
 /**
  * Fonction de vérification du formulaire avant traitement
- * 
+ *
  * Vérifie la présence d'un statut depuis le champs adéquat
  * Vérifie que la longueur du statut n'excède pas la longueur maximale
  */
 function formulaires_pouetter_verifier_dist(){
 	include_spip('inc/charsets');
 	$erreurs = array();
+
 	if (!$status = _request('status')){
 		$erreurs['status'] = _T('info_obligatoire');
-	}
-	elseif (spip_strlen($status)>500){
+	} elseif (spip_strlen($status)>500) {
 		$erreurs['status'] = _T('mastodon:longueur_maxi_status');
 	}
 
-	return
-		$erreurs;
+	return $erreurs;
 }
 
 /**
  * Fonction de traitement du formulaire
  * Envoie la contribution au service configuré
- * 
- * S'il y a une erreur en retour (false), 
+ *
+ * S'il y a une erreur en retour (false),
  * on affiche un message explicitant qu'il y a une erreur dans la configuration
  */
 function formulaires_pouetter_traiter_dist(){
-	$res = array();
+	$res = array(
+		'editable' => true,
+	);
+
 	if ($status = _request('status')){
 		include_spip('inc/mastodon');
 		$retour = pouet($status);
 
-		if($retour){
-			set_request('status','');
-			$res = array('message_ok'=>_T('mastodon:message_envoye')." ".$status,'editable'=>true);
-		}else{
-			$erreur = _T('mastodon:erreur_verifier_configuration');
-			if (defined('_TEST_MICROBLOG_SERVICE') AND !_TEST_MICROBLOG_SERVICE)
-				$erreur = _T('mastodon:erreur_envoi_desactive');
-			$res = array('message_erreur'=>$erreur,'editable'=>true);
+		if($retour and isset($retour['id']) and $retour['id']){
+			if (isset($retour['content'])) {
+				$status = $retour['content'];
+			}
+			else {
+				$status = nl2br($status);
+			}
+			$res['message_ok']=_T('mastodon:message_envoye') . " <blockquote>$status</blockquote>";
 		}
-	}
-	else
-		$res = array('message_erreur'=>'???','editable'=>true);
+		else {
+			$erreur = _T('mastodon:erreur_verifier_configuration');
+			if (defined('_TEST_MICROBLOG_SERVICE') AND !_TEST_MICROBLOG_SERVICE){
+				$erreur = _T('mastodon:erreur_envoi_desactive');
+			}
+			$res['message_erreur'] = $erreur;
+		}
 
-	return
-		$res;
+	}
+
+	return $res;
 }
 

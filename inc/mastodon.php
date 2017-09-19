@@ -186,7 +186,14 @@ function pouet($status, $options = array()){
 	$max_len = $options['max_len'];
 	// Preparer le message (utf8 < 500 caracteres)
 	include_spip('inc/charsets');
-	$status = trim(preg_replace(',\s+,', ' ', $status));
+
+	// legitime de modifier les espacements ?
+	// non, plus avec mastodon ou on a de la place
+	// on se contente de trimer
+	//$status = trim(preg_replace(', +,', ' ', $status));
+	//$status = trim(preg_replace(",\n\n+,", "\n\n", $status));
+	$status = trim($status);
+
 	$status = unicode2charset(charset2unicode($status), 'utf-8');
 	$status = substr($status, 0, $max_len);
 
