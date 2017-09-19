@@ -6,8 +6,9 @@
  * @author Maxence Cauderlier
  * @link http://max-koder.fr
  * @link https://framagit.org/MaxKoder/TootoPHP
+ * @link https://git.nursit.net/Cerdic/TootoPHP
  * @package TootoPHP
- * @version 1.0.0
+ * @version 1.3.0
  * @license http://opensource.org/licenses/MIT The MIT License  
  */
 
