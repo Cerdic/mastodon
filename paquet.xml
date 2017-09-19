@@ -2,8 +2,8 @@
 	prefix="mastodon"
 	categorie="communication"
 	version="1.0.0"
-	etat="stable"
-	compatibilite="[3.0.0;3.2.*]"
+	etat="test"
+	compatibilite="[3.1.0;3.2.*]"
 	schema="1.0.0"
 	logo="prive/themes/spip/images/mastodon-32.png"
 	documentation=""
@@ -12,9 +12,9 @@
 	<nom>Mastodon</nom>
 	<!-- Un plugin Mastodon facile a installer -->
 
-	<auteur lien="https://nursit.com">C&#233;dric</auteur>
+	<auteur lien="https://www.nursit.com/Cedric-Morin">C&#233;dric</auteur>
 
-	<copyright>2009-2013</copyright>
+	<copyright>2017</copyright>
 	<licence lien="http://www.gnu.org/licenses/gpl-3.0.html">GPL 3</licence>
 
 	<traduire module="mastodon" reference="fr" gestionnaire="salvatore" />
