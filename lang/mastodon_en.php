@@ -24,6 +24,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'erreur_connexion_compte' => 'Unable to connect with @account@ account.',
 	'erreur_envoi_desactive' => 'Toot sending is de-activated due to <tt>_TEST_MICROBLOG_SERVICE</tt> constant',
 	'erreur_config_pour_pouetter' => 'Configure the plugin to send a message.',
+	'erreur_creation_application' => 'Erreur when registering application',
 
 	// I
 	'invite' => 'Prompt',
