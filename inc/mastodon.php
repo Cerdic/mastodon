@@ -167,7 +167,7 @@ function pouet($status, $options = array()){
 	$default_options = array(
 		'user_name' => '',
 		'max_len' => 500,
-		'visibility' => 'unlisted',//'public',
+		'visibility' => 'public',
 	);
 	$options = array_merge($default_options, $options);
 
