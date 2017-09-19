@@ -1,16 +1,19 @@
-<B_tweets>
-<ul class='liste-items'>
-<BOUCLE_tweets(DATA)
- {source mastodon,#VAL{user_timeline}|parametre_url{screen_name,#ENV{screen_name,''}}}
- {datapath statuses}
- {pagination 10}
->
-<li class='item tweet'>
-<img src='#VALEUR{user/profile_image_url}' style='float:right' />
-from <a href='http://mastodon.com/#VALEUR{user/screen_name}'>@#VALEUR{user/screen_name} (#VALEUR{user/name})</a> :
-&laquo;<q>#VALEUR{text}</q>&raquo;
-</li>
-</BOUCLE_tweets>
-</ul>
-[<p class='pagination'>(#PAGINATION{precedent_suivant})</p>]
-</B_tweets>
+<B_pouets>
+ <ul class='liste-items'>
+ <BOUCLE_pouets(DATA)
+  {source mastodon,#VAL{timelines/home}|parametre_url{mastodon_account,#ENV{account,''}}}
+  {pagination 10}
+ >
+ <li class='item pouet'>
+  <img src='#VALEUR{account/avatar_static}' style='float:left;margin:0 10px 10px 0' width="32" height="32"/>
+  from <a href='#VALEUR{account/url}'>[(#VALEUR{account}|mastodon_user_full_screen_name)][ \((#VALEUR{account/display_name})\)]</a>
+  [<a href="#VALEUR{url}">(#VALEUR{created_at}|affdate)</a>]
+  <blockquote>
+   #VALEUR{content}
+   <BOUCLE_images(POUR){tableau #VALEUR{media_attachments}}>[(#VALEUR{type}|=={image}|oui)<img src="#VALEUR{url}" />]</BOUCLE_images>
+  </blockquote>
+ </li>
+ </BOUCLE_pouets>
+ </ul>
+ [<p class='pagination'>(#PAGINATION{precedent_suivant})</p>]
+</B_pouets>
