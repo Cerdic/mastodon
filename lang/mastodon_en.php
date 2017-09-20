@@ -34,11 +34,17 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// L
 	'label_associer_compte_mastodon' => 'Link your mastodon account to this site',
-	'label_aucun_compte_mastodon' => 'Aucun compte Mastodon enregistré.',
+	'label_aucun_compte_mastodon' => 'Aucun compte Mastodon enregistrÃ©.',
+	'label_default_visibility' => 'Default visibility',
 	'label_dissocier_compte_mastodon' => 'Delete this account',
 	'label_status' => 'What\'s in your mind ?',
 	'label_pouet'=> 'Edit the toot',
 	'label_username' => 'User name',
+	'label_visibility' => 'Visibility',
+	'label_visibility_public' => 'Public (post to public timelines)',
+	'label_visibility_unlisted' => 'Unlisted (do not post to public timelines)',
+	'label_visibility_private' => 'Followers-only (post to followers only)',
+	'label_visibility_direct' => 'Direct (post to mentioned users only)',
 	'legend_api_mastodon' => 'Mastodon Application',
 	'legend_comptes_mastodon' => 'Mastodon Accounts',
 	'lien_documentation' => 'View documentation',

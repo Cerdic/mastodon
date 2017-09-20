@@ -1,5 +1,6 @@
 <!-- nom=microblog -->
 #CACHE{0}
+#SET{fl,mastodon}
 <div class="formulaire_spip formulaire_editer formulaire_cfg">
 	<h3 class="titrem"><:mastodon:titre_configurer_mastodon_app:></h3>
 	[<p class='reponse_formulaire reponse_formulaire_erreur'>(#ENV*{message_erreur})</p>]
@@ -67,6 +68,21 @@
 			<legend><:mastodon:notifications:></legend>
 			<p class="explication"><:mastodon:elements_signaler:></p>
 			<ul>
+				#SET{name,default_visibility}#SET{obli,''}#SET{defaut,#CONFIG{mastodon/default_visibility,public}}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
+				<li class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+					<label for="#GET{name}"><:mastodon:label_default_visibility:></label>[
+					<span class='erreur_message'>(#GET{erreurs})</span>
+					]<select name="#GET{name}" class="select" id="#GET{name}">
+						#SET{val,public}
+						<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_visibility','_',#GET{val}}|_T)]</option>
+						#SET{val,unlisted}
+						<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_visibility','_',#GET{val}}|_T)]</option>
+						#SET{val,private}
+						<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_visibility','_',#GET{val}}|_T)]</option>
+						#SET{val,direct}
+						<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_visibility','_',#GET{val}}|_T)]</option>
+					</select>
+				</li>
 				<li class="editer_notifications">
 					<label><:mastodon:notifications_publiques:></label>
 					<div>

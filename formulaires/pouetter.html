@@ -19,6 +19,21 @@
 				]<label for="#GET{name}">[(#GET{fl}|concat{':label_',#GET{name}}|_T)] <em>[(#ENV{_max_len}|moins{#ENV{status}|strlen})]</em></label>
 				<textarea name="#GET{name}" id="#GET{name}" rows="10" cols="25">#ENV{status}</textarea>
 	    </li>
+		  #SET{name,visibility}#SET{obli,''}#SET{defaut,#CONFIG{mastodon/default_visibility,public}}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
+			<li class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+				<label for="#GET{name}">[(#GET{fl}|concat{':label_',#GET{name}}|_T)]</label>[
+				<span class='erreur_message'>(#GET{erreurs})</span>
+				]<select name="#GET{name}" class="select" id="#GET{name}">
+					#SET{val,public}
+					<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</option>
+					#SET{val,unlisted}
+					<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</option>
+					#SET{val,private}
+					<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</option>
+					#SET{val,direct}
+					<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</option>
+				</select>
+			</li>
 	  </ul>
 	  [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
 	  <!--extra-->

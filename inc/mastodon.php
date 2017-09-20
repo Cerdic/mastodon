@@ -167,9 +167,13 @@ function pouet($status, $options = array()){
 	$default_options = array(
 		'user_name' => '',
 		'max_len' => 500,
-		'visibility' => 'public',
+		'visibility' => lire_config('mastodon/default_visibility','public'),
 	);
 	$options = array_merge($default_options, $options);
+	// si option visibilite foireuse, on met unlisted (pour pas trop polluer)
+	if (!in_array($options['visibility'], array('public','unlisted','private','direct'))) {
+		$options['visibility'] = 'unlisted';
+	}
 
 	// si pas d'api utilisable on sort
 	if (!$user = mastodon_oauth_user_token($options['user_name'])

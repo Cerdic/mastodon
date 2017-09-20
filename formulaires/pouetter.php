@@ -19,6 +19,7 @@ function formulaires_pouetter_charger_dist(){
 	$valeurs =
 		array(
 			'status' => '',
+			'visibility' => '',
 			'_max_len' => 500,
 		);
 	include_spip("inc/mastodon");
@@ -62,7 +63,11 @@ function formulaires_pouetter_traiter_dist(){
 
 	if ($status = _request('status')){
 		include_spip('inc/mastodon');
-		$retour = pouet($status);
+		$options = array();
+		if ($visibility = _request('visibility')) {
+			$options['visibility'] = $visibility;
+		}
+		$retour = pouet($status, $options);
 
 		if($retour and isset($retour['id']) and $retour['id']){
 			if (isset($retour['content'])) {
