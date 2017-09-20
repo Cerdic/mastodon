@@ -16,6 +16,12 @@ if (!defined("_ECRIRE_INC_VERSION")){
  * Fonction de chargement des valeurs par defaut des champs du formulaire
  */
 function formulaires_pouetter_charger_dist(){
+
+	include_spip('inc/autoriser');
+	if (!autoriser('publier', 'pouet')) {
+		return false;
+	}
+
 	$valeurs =
 		array(
 			'status' => '',

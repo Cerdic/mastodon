@@ -10,10 +10,18 @@
 
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
+/**
+ * Autoriser le menu pouet : si configuration OK et si admin (ou autorisation specifique definie)
+ * @return bool
+ */
 function autoriser_pouetter_menu_dist(){
 	include_spip("inc/mastodon");
 	if (!mastodon_verifier_config())
 		return false;
+
+	if (!autoriser('publier','pouet')) {
+		return false;
+	}
 	return true;
 }
 

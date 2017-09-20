@@ -15,6 +15,13 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
  * Fonction de chargement des valeurs par defaut des champs du formulaire
  */
 function formulaires_editer_pouet_charger_dist($objet,$id_objet,$hide_form=false){
+
+	include_spip('inc/autoriser');
+	if (!autoriser('modifier', $objet, $id_objet)
+	  or !autoriser('publier', 'pouet')) {
+		return false;
+	}
+
 	$primary = id_table_objet($objet);
 
 	$valeurs = array();
