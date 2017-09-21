@@ -1,0 +1,19 @@
+<B_pouets>
+ <ul class='liste-items'>
+ <BOUCLE_pouets(DATA)
+  {source mastodon,#VAL{timelines/tag/#ENV{hashtag}}|parametre_url{mastodon_account,#ENV{account,''}}}
+  {pagination 10}
+ >
+ <li class='item pouet'>
+  <img src='#VALEUR{account/avatar_static}' style='float:left;margin:0 10px 10px 0' width="32" height="32"/>
+  from <a href='#VALEUR{account/url}'>[(#VALEUR{account}|mastodon_user_full_screen_name)][ \((#VALEUR{account/display_name})\)]</a>
+  [<a href="#VALEUR{url}">(#VALEUR{created_at}|affdate)</a>]
+  <blockquote>
+   #VALEUR{content}
+   <BOUCLE_images(POUR){tableau #VALEUR{media_attachments}}>[(#VALEUR{type}|=={image}|oui)<img src="#VALEUR{url}" />]</BOUCLE_images>
+  </blockquote>
+ </li>
+ </BOUCLE_pouets>
+ </ul>
+ [<p class='pagination'>(#PAGINATION{precedent_suivant})</p>]
+</B_pouets>
