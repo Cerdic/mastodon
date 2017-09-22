@@ -17,7 +17,7 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
  * @return int
  */
 function genie_mastodon_dist($last) {
-	$cfg = @unserialize($GLOBALS['meta']['microblog']);
+	$cfg = @unserialize($GLOBALS['meta']['mastodon']);
 	// si le site utilise les articles postdates
 	// et que l'on a configurer pour alerter a la publication uniquement
 	// il faut surveiller les articles publies
@@ -41,7 +41,7 @@ function genie_mastodon_dist($last) {
 		include_spip('inc/mastodon');
 		while($row = sql_fetch($res)){
 			$status = mastodon_annonce('instituerarticle',array('id_article'=>$row['id_article']));
-			mastodon_envoyer_tweet($status,array('objet'=>'article','id_objet'=>$row['id_article']));
+			mastodon_envoyer_pouet($status,array('objet'=>'article','id_objet'=>$row['id_article']));
 		}
 		// raz des annonces deja faites
 		include_spip('inc/meta');
@@ -50,21 +50,3 @@ function genie_mastodon_dist($last) {
 
 	return 1;
 }
-
-/**
- * Ajouter la tache cron pour tweeter les articles post-dates, chaque heure
- * @param $taches_generales
- * @return mixed
- */
-function mastodon_taches_generales_cron($taches_generales){
-	if ($GLOBALS['meta']["post_dates"]=='non'
-		AND	$cfg = @unserialize($GLOBALS['meta']['microblog'])
-		and $cfg['evt_publierarticles']
-		AND $cfg['evt_publierarticlesfutur']=='publication'){
-		// surveiller toutes les heures les publications post-dates
-		$taches_generales['mastodon'] = 3600;
-	}
-	return $taches_generales;
-}
-
-?>

@@ -1,7 +1,7 @@
 <paquet
 	prefix="mastodon"
 	categorie="communication"
-	version="1.1.2"
+	version="1.2.0"
 	etat="test"
 	compatibilite="[3.0.0;3.2.*]"
 	schema="1.0.0"
@@ -24,8 +24,8 @@
 	<pipeline nom="autoriser" inclure="mastodon_fonctions.php" />
 	<pipeline nom="declarer_tables_objets_sql" inclure="mastodon_administrations.php" />
 	<pipeline nom="notifications" inclure="inc/mastodon_notifications.php" />
-	<pipeline nom="taches_generales_cron" inclure="genie/mastodon.php" />
-	<pipeline nom="afficher_complement_objet" inclure="mastodon_pipelines.php" />
+	<pipeline nom="taches_generales_cron" inclure="mastodon_fonctions.php" />
+	<pipeline nom="afficher_complement_objet" inclure="mastodon_fonctions.php" />
 
 	<menu nom="pouetter" titre="mastodon:titre_mastodon" parent="menu_publication" icone="images/mastodon-16.png" />
 

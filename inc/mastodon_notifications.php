@@ -91,10 +91,22 @@ function mastodon_notifications($flux) {
 	return $flux;
 }
 
+/**
+ * Message a pouetter selon la notification
+ * @param $quoi
+ * @param $contexte
+ * @return string
+ */
 function mastodon_annonce($quoi, $contexte){
 	return trim(recuperer_fond("modeles/mastodon_$quoi", $contexte));
 }
 
+/**
+ * Envoi async d'un pouet
+ * @param string $status
+ * @param array $liens
+ * @param null $heure
+ */
 function mastodon_envoyer_pouet($status, $liens=array(), $heure = null){
 
 	// un status vide ne provoque pas d'envoi

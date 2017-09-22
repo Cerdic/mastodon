@@ -96,3 +96,40 @@ function filtre_mastodon_api_call_dist($command,$type='get',$params=array(),$opt
 	return mastodon_api_call($command, $type, $params, $options);
 }
 
+
+/**
+ * Affichage du formulaire de pouet
+ *
+ * @param array $flux
+ * @return array
+ */
+function mastodon_afficher_complement_objet($flux){
+	if ($flux['args']['type']=='article'
+	  AND $id_article = $flux['args']['id']
+	  AND include_spip('inc/config')
+	  AND $cfg = lire_config('mastodon')
+		AND ($cfg['evt_publierarticles'] OR $cfg['evt_proposerarticles'])
+		AND $cfg['invite']
+		){
+		$flux['data'] .= recuperer_fond('prive/editer/pouet', array_merge($_GET, array('objet'=>'article','id_objet'=>$id_article)));
+	}
+
+	return $flux;
+}
+
+
+/**
+ * Ajouter la tache cron pour tweeter les articles post-dates, chaque heure
+ * @param $taches_generales
+ * @return mixed
+ */
+function mastodon_taches_generales_cron($taches_generales){
+	if ($GLOBALS['meta']["post_dates"]=='non'
+		AND	$cfg = @unserialize($GLOBALS['meta']['mastodon'])
+		and $cfg['evt_publierarticles']
+		AND $cfg['evt_publierarticlesfutur']=='publication'){
+		// surveiller toutes les heures les publications post-dates
+		$taches_generales['mastodon'] = 3600;
+	}
+	return $taches_generales;
+}
