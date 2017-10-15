@@ -263,7 +263,7 @@ function mastodon_api_call($command,$type='get',$params=array(),$options=null){
 		else {
 			if (!$res)
 				return false;
-			spip_log("mastodon_api_call:$command echec connexion, on utilise le cache perime","mastodon".LOG_INFO_IMPORTANTE);
+			spip_log("mastodon_api_call:$command echec connexion, on utilise le cache perime","mastodon"._LOG_INFO_IMPORTANTE);
 		}
 	}
 
@@ -306,3 +306,4 @@ function mastodon_verifier_config($complete = false){
 
 	return true;
 }
+
