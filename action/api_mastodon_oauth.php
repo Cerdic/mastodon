@@ -11,9 +11,9 @@
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
 /**
- * Fonction vérifiant le retour de mastodon
+ * Fonction vÃ©rifiant le retour de mastodon
  * Elle met dans la configuration du plugin les tokens
- * nécessaires pour de futures connexions
+ * nÃ©cessaires pour de futures connexions
  */
 function action_api_mastodon_oauth_dist(){
 
