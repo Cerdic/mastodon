@@ -307,3 +307,159 @@ function mastodon_verifier_config($complete = false){
 	return true;
 }
 
+function mastodon_account2url($account) {
+	// truc@mamot.fr -> //mamot.fr/@truc
+	$account = ltrim($account, '@');
+	$url = explode('@', $account);
+	$username = array_shift($url);
+	$instance = array_shift($url);
+	$url = "//" . $instance . "/@" . $username;
+
+	return array($username, $instance, $url);
+}
+
+function mastodon_url2account($url) {
+	$url = explode('://', $url);
+	$url = end($url);
+	$url = explode('/@', $url);
+	$instance = array_shift($url);
+	$account = array_shift($url);
+	return "$account@$instance";
+}
+
+/**
+ * Unfollow un compte
+ * @param string $account
+ * @param string $options
+ * @return bool
+ */
+function mastodon_unfollow($account, $options) {
+	// si pas d'api utilisable on sort
+	if (!$user = mastodon_oauth_user_token(isset($options['mastodon_account']) ? $options['mastodon_account'] : null)
+	  or !$app = mastodon_oauth_load_registered_app(reset($user)))
+		return false;
+
+	$followings = $app->getFollowing();
+
+	// truc@mamot.fr -> //mamot.fr/@truc
+	list($username, $instance, $url) = mastodon_account2url($account);
+
+	// est-ce que le compte est dans les followings ?
+	foreach ($followings as $following) {
+		if ($following['username'] === $username
+			and strpos($following['url'], $url) !== false) {
+			$id = $following['id'];
+			$res = $app->callApi("accounts/$id/unfollow", 'post');
+			if ($res['http_code'] !== 200
+			  or !isset($res['content'])
+				or !isset($res['content']['id'])) {
+				spip_log("mastodon_unfollow $account : ".var_export($res, true),'mastodon'._LOG_ERREUR);
+				return false;
+			}
+
+			return true;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Follower un compte si besoin
+ * on verifie avant qu'il ne l'est pas deja en memoizant la liste des followings
+ * pour permettre plusieurs follows dans un seul hit sans multiplier les appels au serveur mastodon
+ *
+ * @param string $account
+ * @param array $options
+ * @return bool
+ */
+function mastodon_follow_if_not_already($account, $options) {
+	static $followings = null;
+
+	// si pas d'api utilisable on sort
+	if (!$user = mastodon_oauth_user_token(isset($options['mastodon_account']) ? $options['mastodon_account'] : null)
+	  or !$app = mastodon_oauth_load_registered_app(reset($user)))
+		return false;
+
+	if (is_null($followings)) {
+		$followings = $app->getFollowing();
+	}
+
+	// truc@mamot.fr -> //mamot.fr/@truc
+	list($username, $instance, $url) = mastodon_account2url($account);
+
+	// est-ce que le compte est deja dans les followings ?
+	foreach ($followings as $following) {
+		if ($following['username'] === $username
+			and strpos($following['url'], $url) !== false) {
+			return $following;
+		}
+	}
+	
+	// sinon l'ajouter
+	$params = array('uri' => $account);
+	$res = $app->callApi('follows', 'post', $params);
+	if ($res['http_code'] !== 200
+	  or !isset($res['content'])
+		or !isset($res['content']['id'])) {
+		spip_log("mastodon_follow_if_not_already $account : ".var_export($res, true),'mastodon'._LOG_ERREUR);
+		return false;
+	}
+	$following = $res['content'];
+	$followings[] = $following;
+
+	return $following;
+}
+
+/**
+ * Follower automatiquement tous les followers
+ * @param array $options
+ * @return bool
+ */
+function mastodon_followback($options) {
+	// si pas d'api utilisable on sort
+	if (!$user = mastodon_oauth_user_token(isset($options['mastodon_account']) ? $options['mastodon_account'] : null)
+	  or !$app = mastodon_oauth_load_registered_app(reset($user)))
+		return false;
+
+	$params = array(
+		'limit' => 80,
+	);
+	$maxiter = 100;
+
+	$id = $app->getUserID();
+	$method = 'accounts/' . $id . '/followers';
+	$res = $app->callApi($method, 'get', $params);
+	$followers = $res['content'];
+	while($params and $followers and $maxiter-->0) {
+		$params = false;
+		foreach ($followers as $follower) {
+			$account = mastodon_url2account($follower['url']);
+			//mastodon_follow_if_not_already($account, $options);
+		}
+
+		// trouver l'url next
+		foreach ($res['headers'] as $header) {
+			if (strncmp($header, 'Link:' , 5) == 0) {
+				$link = trim(substr($header,5));
+				$link = explode(',', $link);
+				foreach ($link as $l){
+					if (strpos($l,'rel="next"')!==false) {
+						$l = explode(';', $l);
+						$l = trim(reset($l));
+						$l = trim($l,'<> ');
+						$l = explode('?', $l);
+						parse_str(end($l), $params);
+					}
+				}
+			}
+		}
+
+		if ($params) {
+			$res = $app->callApi($method, 'get', $params);
+			$followers = $res['content'];
+		}
+	}
+
+	return true;
+}
