@@ -45,6 +45,12 @@ class HttpRequest
      */
     public $last_url;
 
+    /**
+     * Last headers recieved
+     * @var string
+     */
+    public $last_headers;
+
 
     /**
      * Setting up domain and API URL
@@ -125,6 +131,9 @@ class HttpRequest
         
         curl_setopt_array($curl, $this->getOpts($method, $url, $headers, $params));
 
+        // on veut recuperer les headers de la reponse
+        curl_setopt ($curl, CURLOPT_HEADER, 1);
+
         $response = curl_exec($curl);
 
         if (curl_error($curl) !== '') {
@@ -132,8 +141,13 @@ class HttpRequest
         }
         $infos = curl_getinfo($curl);
 
+
+        $headers = substr($response, 0, $infos['header_size']);
+        $response = substr($response, $infos['header_size']);
+
         $this->last_http_code = $infos['http_code'];
         $this->last_url = $infos['url'];
+        $this->last_headers = $headers;
         curl_close($curl);
         
         if ($response !==  false) {

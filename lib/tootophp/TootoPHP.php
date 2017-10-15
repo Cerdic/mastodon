@@ -233,6 +233,9 @@ class TootoPHP
                 $res['http_code'] = $this->http->last_http_code;
                 $res['url'] = $this->http->last_url;
                 $res['time'] = $_SERVER['REQUEST_TIME'];
+                $headers = explode("\n", $this->http->last_headers);
+                $headers = array_map('trim', $headers);
+                $res['headers'] = array_filter($headers);
                 break;
             case 'post':
                 $res['content']  = $this->http->post(
@@ -243,6 +246,9 @@ class TootoPHP
                 $res['http_code'] = $this->http->last_http_code;
                 $res['url'] = $this->http->last_url;
                 $res['time'] = $_SERVER['REQUEST_TIME'];
+                $headers = explode("\n", $this->http->last_headers);
+                $headers = array_map('trim', $headers);
+                $res['headers'] = array_filter($headers);
                 break;
             default:
                 $res = false;
