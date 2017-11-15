@@ -416,7 +416,7 @@ function mastodon_follow_if_not_already($account, $options) {
  * @param array $options
  * @return bool
  */
-function mastodon_followback($options) {
+function mastodon_followback($options = array()) {
 	// si pas d'api utilisable on sort
 	if (!$user = mastodon_oauth_user_token(isset($options['mastodon_account']) ? $options['mastodon_account'] : null)
 	  or !$app = mastodon_oauth_load_registered_app(reset($user)))
