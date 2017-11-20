@@ -192,7 +192,7 @@ function pouet($status, $options = array()){
 	$status = trim($status);
 
 	$status = unicode2charset(charset2unicode($status), 'utf-8');
-	$status = substr($status, 0, $max_len);
+	$status = spip_substr($status, 0, $max_len);
 
 	if (!strlen($status)) {
 		spip_log('Rien a pouetter','mastodon');
