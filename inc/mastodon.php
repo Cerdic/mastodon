@@ -435,7 +435,7 @@ function mastodon_followback($options = array()) {
 		$params = false;
 		foreach ($followers as $follower) {
 			$account = mastodon_url2account($follower['url']);
-			//mastodon_follow_if_not_already($account, $options);
+			mastodon_follow_if_not_already($account, $options);
 		}
 
 		// trouver l'url next
