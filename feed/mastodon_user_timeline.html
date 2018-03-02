@@ -10,7 +10,7 @@
     <description>Mastodon statuses from #GET{display_name_short}.</description>
     <language>en-us</language>
     <ttl>40</ttl>
-    <BOUCLE_pouets(POUR) {tableau #ARRAY{id,#ENV{id},limit,#ENV{limit,10},filter,#ENV{filter}}|mastodon_get_statuses}>
+    <BOUCLE_pouets(POUR) {tableau #ARRAY{id,#ENV{id},limit,#ENV{limit,20},filter,#ENV{filter}}|mastodon_get_statuses}>
 	    #SET{display_name_short,#VALEUR{account/display_name}}
 	    #SET{display_name,#VALEUR{account/url}|mastodon_url2account}
 	    #SET{display_desc,#VALEUR{account/note}}
