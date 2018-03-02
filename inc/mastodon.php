@@ -463,3 +463,83 @@ function mastodon_followback($options = array()) {
 
 	return true;
 }
+
+/**
+ * Recuperer les status d'un compte, avec un eventuel filtre
+ * @param array $options
+ *   string id : id du compte (compte connecte sinon)
+ *   int limit : nombre de status (40 par defaut)
+ *   string filter : filtre
+ *     with:media > ne retourne que les status avec un media joint
+ * @return array
+ */
+function mastodon_get_statuses($options = array()) {
+	// si pas d'api utilisable on sort
+	if (!$user = mastodon_oauth_user_token(isset($options['mastodon_account']) ? $options['mastodon_account'] : null)
+	  or !$app = mastodon_oauth_load_registered_app(reset($user)))
+		return false;
+
+	$limit = 40;
+	if (isset($options['limit'])) {
+		$limit = $options['limit'];
+	}
+	$params = array(
+		'limit' => min($limit, 40),
+	);
+	$maxiter = 100;
+
+	$id = false;
+	if (isset($options['id'])) {
+		$id = $options['id'];
+	}
+	if (!$id) {
+		$id = $app->getUserID();
+	}
+
+	$all_statuses = array();
+	$method = 'accounts/' . $id . '/statuses';
+	$res = $app->callApi($method, 'get', $params);
+	$statuses = $res['content'];
+	do {
+		$s = array_shift($statuses);
+		$ok = true;
+		if (isset($options['filter']) and $options['filter']) {
+			$ok = false;
+			if ($options['filter'] == 'with:media' and count($s['media_attachments'])) {
+				$ok = true;
+			}
+		}
+		if ($ok) {
+			$all_statuses[] = $s;
+		}
+
+		if (!$statuses and count($all_statuses)<$limit) {
+			$params = false;
+			// trouver l'url next
+			foreach ($res['headers'] as $header) {
+				if (strncmp($header, 'Link:' , 5) == 0) {
+					$link = trim(substr($header,5));
+					$link = explode(',', $link);
+					foreach ($link as $l){
+						if (strpos($l,'rel="next"')!==false) {
+							$l = explode(';', $l);
+							$l = trim(reset($l));
+							$l = trim($l,'<> ');
+							$l = explode('?', $l);
+							parse_str(end($l), $params);
+						}
+					}
+				}
+			}
+
+			if ($params) {
+				$res = $app->callApi($method, 'get', $params);
+				$statuses = $res['content'];
+				$maxiter--;
+			}
+		}
+	}
+	while($statuses and $maxiter>0 and count($all_statuses)<$limit);
+
+	return $all_statuses;
+}

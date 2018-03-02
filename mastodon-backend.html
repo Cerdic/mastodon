@@ -1,0 +1,9 @@
+#CACHE{600}
+[(#HTTP_HEADER{Content-type: text/xml[; charset=(#CHARSET)]})
+]<BOUCLE_condition_account(CONDITION) {si #ENV{mastodon_account,''}|=={''}}>[
+(#SET{infos_compte,[(#VAL{accounts/verify_credentials}|mastodon_api_call)]})]
+</BOUCLE_condition_account>
+[(#REM) TODO : trouver le user d'apres son screenname]
+<//B_condition_account>
+<INCLURE{fond=feed/mastodon_user_timeline,id=#GET{infos_compte}|table_valeur{id},limit,filter} />
+#FILTRE{trim}

@@ -61,25 +61,6 @@ function generer_url_racourcie($id, $entite='article', $args='', $ancre='', $pub
 }
 
 
-/**
- * Fonction d'utilisation simple de l'API mastodon oAuth
- *
- * @param $command string : la commande à passer
- * @param $type string : le type de commande (get/post/delete)
- * @param $params array : les paramètres dans un array de la commande
- * @param $retour string : le retour souhaité par défaut cela renverra la chaine
- * ou l'array retourné par la commande. Sinon on peut utiliser les valeurs http_code,http_info,url
- * @param array $tokens
- * @return bool|string|array
- */
-function microblog_mastodon_api($command,$type='get',$params=array(),$retour='',$tokens=null){
-	$options = $tokens;
-	if ($retour)
-		$options['return_type'] = $retour;
-	include_spip("inc/mastodon");
-	return mastodon_api_call($command, $type, $params, $options);
-}
-
 
 /**
  * Pour utiliser |mastodon_api_call dans un squelette
@@ -132,4 +113,32 @@ function mastodon_taches_generales_cron($taches_generales){
 		$taches_generales['mastodon'] = 3600;
 	}
 	return $taches_generales;
+}
+
+/**
+ * Filtre shorthand pour utiliser mastodon_get_statuses dans un squelette
+ * @param array $options
+ * @return array
+ */
+function filtre_mastodon_get_statuses_dist($options) {
+	include_spip('inc/mastodon');
+	return mastodon_get_statuses($options);
+}
+
+/**
+ * filtre pour determiner le mime des attachments
+ * @param string $filename
+ * @return string
+ */
+function mastodon_mime_type_fichier($filename) {
+	$mime = "";
+	if (preg_match(",[.](\w+)$,Uims", $filename, $m)) {
+		$extension = strtolower($m[1]);
+		if ($extension == 'jpeg') $extension = 'jpg';
+		if ($type = sql_fetsel('titre, mime_type', 'spip_types_documents', 'extension = ' . sql_quote($extension))) {
+			$mime = $type['mime_type'];
+		}
+	}
+	return $mime;
+
 }

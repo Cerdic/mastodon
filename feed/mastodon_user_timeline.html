@@ -1,0 +1,31 @@
+#CACHE{600}
+[(#HTTP_HEADER{Content-type: text/xml[; charset=(#CHARSET)]})]<?xml version="1.0"[ encoding="(#CHARSET)"]?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:georss="http://www.georss.org/georss">
+	<B_pouets>
+  <channel>
+    <title>#GET{display_name}</title>
+	  <subtitle>[(#GET{display_desc}|texte_backend)]</subtitle>
+    <link>#GET{url_compte}</link>
+    <atom:link type="application/rss+xml" href="#SELF" rel="self"/>
+    <description>Mastodon statuses from #GET{display_name_short}.</description>
+    <language>en-us</language>
+    <ttl>40</ttl>
+    <BOUCLE_pouets(POUR) {tableau #ARRAY{id,#ENV{id},limit,#ENV{limit,10},filter,#ENV{filter}}|mastodon_get_statuses}>
+	    #SET{display_name_short,#VALEUR{account/display_name}}
+	    #SET{display_name,#VALEUR{account/url}|mastodon_url2account}
+	    #SET{display_desc,#VALEUR{account/note}}
+	    #SET{url_compte,#VALEUR{account/url}}
+	    <item>
+	      <title>[(#VALEUR{account/display_name}|texte_backend)]: [(#VALEUR{content}|couper{80}|texte_backend)]</title>
+	      <description>[(#VALEUR{content}|texte_backend)]</description>
+	      <pubDate>#VALEUR{created_at}</pubDate>
+	      <guid>#VALEUR{uri}</guid>
+	      <link>#VALEUR{url}</link>
+		    <BOUCLE_medias(POUR){tableau #VALEUR{media_attachments}}>[(#VALEUR{type}|=={image}|oui)
+	      <enclosure url="#VALEUR{url}"[ length="(#TAILLE)"][ type="(#VALEUR{url}|basename|mastodon_mime_type_fichier)"] />]
+		    ]</BOUCLE_medias>
+	    </item>
+    </BOUCLE_pouets>
+  </channel>
+	</B_pouets>
+</rss>
