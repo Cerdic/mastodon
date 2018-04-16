@@ -152,7 +152,7 @@ function mastodon_statuses_to_items($statuses) {
 	$items = array();
 
 	foreach ($statuses as $status) {
-		$data['raw_data'] = $status;
+		$data['raw_data'] = json_encode($status);
 		$data['raw_format'] = 'json';
 
 		$data['titre'] = '@' . $status['account']['acct'] . ' : ' .couper($status['content'],60);
