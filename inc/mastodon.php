@@ -465,9 +465,35 @@ function mastodon_followback($options = array()) {
 }
 
 /**
- * Recuperer les status d'un compte, avec un eventuel filtre
+ * Retrouver un utilisateur a partir de son compte
+ * @param string $user
+ * @param string $host
+ * @return array|bool
+ */
+function mastodon_search_user($user, $host = ''){
+
+	$options = array();
+	$url_user = '@' . $user;
+	if ($host) {
+		$url_user .= '@' . $host;
+		$options['resolve'] = true;
+	}
+	$options['q'] = $url_user;
+
+	$res = mastodon_api_call('search', 'get', $options);
+	if (!$res or !isset($res['accounts']) or !count($res['accounts'])) {
+		return false;
+	}
+
+	$res = reset($res['accounts']);
+	return $res;
+}
+
+/**
+ * Recuperer les status d'un compte ou d'un tag, avec un eventuel filtre
  * @param array $options
- *   string id : id du compte (compte connecte sinon)
+ *   string id : id du compte (compte connecte si ni id ni tag fourni)
+ *   string tag : tag dont on veut les status
  *   int limit : nombre de status (40 par defaut)
  *   string filter : filtre
  *     with:media > ne retourne que les status avec un media joint
@@ -487,17 +513,27 @@ function mastodon_get_statuses($options = array()) {
 		'limit' => min($limit, 40),
 	);
 	$maxiter = 100;
+	// on sait filtrer les media lors de la requete -> plus efficace
+	if (isset($options['filter'])
+		and $options['filter'] == 'with:media') {
+		$params['only_media'] = true;
+	}
 
-	$id = false;
+	$method = false;
 	if (isset($options['id'])) {
 		$id = $options['id'];
+		$method = 'accounts/' . $id . '/statuses';
 	}
-	if (!$id) {
+	if (isset($options['tag'])) {
+		$tag = $options['tag'];
+		$method = 'timelines/tag/' . $tag;
+	}
+	if (!$method) {
 		$id = $app->getUserID();
+		$method = 'accounts/' . $id . '/statuses';
 	}
 
 	$all_statuses = array();
-	$method = 'accounts/' . $id . '/statuses';
 	$res = $app->callApi($method, 'get', $params);
 	$statuses = $res['content'];
 	do {
