@@ -497,6 +497,9 @@ function mastodon_search_user($user, $host = ''){
  *   int limit : nombre de status (40 par defaut)
  *   string filter : filtre
  *     with:media > ne retourne que les status avec un media joint
+ *   string visibility : filtre
+ *     une ou plusieurs visibilite acceptees, separes par une virgule, parmi : public,unlisted,private,direct
+ *     par defaut uniquement public
  * @return array
  */
 function mastodon_get_statuses($options = array()) {
@@ -505,13 +508,11 @@ function mastodon_get_statuses($options = array()) {
 	  or !$app = mastodon_oauth_load_registered_app(reset($user)))
 		return false;
 
+	$params = array();
 	$limit = 40;
 	if (isset($options['limit'])) {
 		$limit = $options['limit'];
 	}
-	$params = array(
-		'limit' => min($limit, 40),
-	);
 	$maxiter = 100;
 	// on sait filtrer les media lors de la requete -> plus efficace
 	if (isset($options['filter'])
@@ -519,7 +520,15 @@ function mastodon_get_statuses($options = array()) {
 		$params['only_media'] = true;
 	}
 
+	$visibility = 'public';
+	if (isset($options['visibility']) and $options['visibility']) {
+		$visibility = $options['visibility'];
+	}
+	$visibility = explode(',', $visibility);
+	$visibility = array_map('trim', $visibility);
+
 	$method = false;
+	$limit = min($limit, 40); // 40 max par requete
 	if (isset($options['id'])) {
 		$id = $options['id'];
 		$method = 'accounts/' . $id . '/statuses';
@@ -532,14 +541,15 @@ function mastodon_get_statuses($options = array()) {
 		$id = $app->getUserID();
 		$method = 'accounts/' . $id . '/statuses';
 	}
+	$params['limit'] = $limit;
 
 	$all_statuses = array();
 	$res = $app->callApi($method, 'get', $params);
 	$statuses = $res['content'];
 	do {
 		$s = array_shift($statuses);
-		$ok = true;
-		if (isset($options['filter']) and $options['filter']) {
+		$ok = (in_array($s['visibility'], $visibility) ? true : false);
+		if ($ok and isset($options['filter']) and $options['filter']) {
 			$ok = false;
 			if ($options['filter'] == 'with:media' and count($s['media_attachments'])) {
 				$ok = true;
