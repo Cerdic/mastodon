@@ -205,7 +205,7 @@ function mastodon_statuses_to_items($statuses) {
 function mastodon_update_anciens_articles_syndiques($limite=100) {
 
 	// les sites en syndication mastodon
-	$id_syndic = sql_allfetsel('id_syndic', 'spip_syndic', 'syndication='.sql_quote('oui').' AND url_syndication like '.sql_quote('mastodon:%'));
+	$id_syndic = sql_allfetsel('id_syndic', 'spip_syndic', 'syndication='.sql_quote('oui').' AND url_syndic like '.sql_quote('mastodon:%'));
 	$id_syndic = array_map('reset', $id_syndic);
 
 	// les articles syndiqués avec raw_data vide
