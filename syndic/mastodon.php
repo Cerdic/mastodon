@@ -196,3 +196,53 @@ function mastodon_statuses_to_items($statuses) {
 
 	return $items;
 }
+
+
+/**
+ * Rechercher tous les status syndiques sans raw_data (a l'ancienne via un RSS)
+ * @param int $limite
+ */
+function mastodon_update_anciens_articles_syndiques($limite=100) {
+
+	// les sites en syndication mastodon
+	$id_syndic = sql_allfetsel('id_syndic', 'spip_syndic', 'syndication='.sql_quote('oui').' AND url_syndication like '.sql_quote('mastodon:%'));
+	$id_syndic = array_map('reset', $id_syndic);
+
+	// les articles syndiqués avec raw_data vide
+	$where = sql_in('id_syndic', $id_syndic) . ' AND raw_data=\'\' AND statut=' . sql_quote('publie');
+	$nb = sql_countsel('spip_syndic_articles', $where);
+	spip_log('mastodon_update_anciens_articles_syndiques : '.$nb.' articles syndiques sans raw_data', 'mastodon'._LOG_INFO_IMPORTANTE);
+	$articles = sql_allfetsel('id_syndic_article, url', 'spip_syndic_articles', $where,'','',$limite?"0,$limite":'');
+	foreach ($articles as $article) {
+		if (!mastodon_retrouver_status('', $article['url'], $article['id_syndic_article'])) {
+			sql_updateq('spip_syndic_articles', array('statut' => 'refuse'), 'id_syndic_article='.intval($article['id_syndic_article']));
+			spip_log('mastodon_update_anciens_articles_syndiques : '.$article['url'].' non trouve -> refuse #'.$article['id_syndic_article'], 'mastodon'._LOG_INFO_IMPORTANTE);
+		}
+	}
+
+}
+
+/**
+ * Rechercher et actualiser un status en base
+ * @param string $raw_data
+ * @param string $url
+ * @param int $id_syndic_article
+ * @return array|string
+ */
+function mastodon_retrouver_status($raw_data, $url, $id_syndic_article) {
+
+	if (!$raw_data) {
+		include_spip('inc/mastodon');
+		$res = mastodon_api_call("search", "get", array('q' => $url));
+		if (count($res['statuses'])
+		  and $status = reset($res['statuses'])
+		  and $status['uri'] = $url) {
+			$raw_data = json_encode($status);
+			sql_updateq('spip_syndic_articles', array('raw_data' => $raw_data, 'raw_format' => 'json', 'raw_methode' => 'mastodon'), 'id_syndic_article='.intval($id_syndic_article));
+			spip_log("mastodon_retrouver_status : $url OK #$id_syndic_article a jour", 'mastodon');
+			return $status;
+		}
+	}
+
+	return '';
+}
