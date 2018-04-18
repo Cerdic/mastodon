@@ -189,7 +189,7 @@ function mastodon_statuses_to_items($statuses) {
 		foreach ($status['tags'] as $tag) {
 			$tags[] = '<a rel="directory" href="' . $tag['url'] . '">#' . $tag['name'] . '</a>';
 		}
-		$data['tags'] = implode(', ', array_unique($tags));
+		$data['tags'] = array_unique($tags);
 
 		$items[] = $data;
 	}
