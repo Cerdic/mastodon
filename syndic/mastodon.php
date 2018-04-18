@@ -38,7 +38,7 @@ function syndic_mastodon_dist($url_syndic) {
 		$items = array();
 		foreach ($tags as $tag) {
 			$i = mastodon_syndiquer_tag($tag, $parts);
-			$items = array_merge($items, $i);
+			$items = mastodon_merge_items($items, $i);
 		}
 	}
 	else {
@@ -210,6 +210,19 @@ function mastodon_statuses_to_items($statuses) {
 	return $items;
 }
 
+function mastodon_merge_items() {
+	$items = array();
+	$args = func_get_args();
+	foreach ($args as $items_a_merger) {
+		foreach ($items_a_merger as $item) {
+			$key = $item['url'];
+			if (!isset($items[$key])) {
+				$items[$key] = $item;
+			}
+		}
+	}
+	return array_values($items);
+}
 
 /**
  * Rechercher tous les status syndiques sans raw_data (a l'ancienne via un RSS)
