@@ -373,7 +373,7 @@ function mastodon_unfollow($account, $options) {
  * @param array $options
  * @return bool
  */
-function mastodon_follow_if_not_already($account, $options) {
+function mastodon_follow_if_not_already($account, $options = array()) {
 	static $followings = null;
 
 	// si pas d'api utilisable on sort
@@ -399,6 +399,7 @@ function mastodon_follow_if_not_already($account, $options) {
 	// sinon l'ajouter
 	$params = array('uri' => $account);
 	$res = $app->callApi('follows', 'post', $params);
+	spip_log("mastodon_follow_if_not_already : follow $account", 'mastodon');
 	if ($res['http_code'] !== 200
 	  or !isset($res['content'])
 		or !isset($res['content']['id'])) {
