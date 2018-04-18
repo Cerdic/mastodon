@@ -187,9 +187,22 @@ function mastodon_statuses_to_items($statuses) {
 
 		$tags = array();
 		foreach ($status['tags'] as $tag) {
-			$tags[] = '<a rel="tag" href="' . $tag['url'] . '">#' . $tag['name'] . '</a>';
+			$name = '#' . $tag['name'];
+			$tags[strtolower($name).$tag['url']] = '<a rel="tag" href="' . $tag['url'] . '">#' . $tag['name'] . '</a>';
 		}
-		$data['tags'] = array_unique($tags);
+
+		// Trouver les microformats dans le content
+		if (preg_match_all(
+			',<a[[:space:]]([^>]+[[:space:]])?rel=[^>]+>.*</a>,Uims',
+			$data['content'], $regs, PREG_PATTERN_ORDER)) {
+			foreach ($regs[0] as $r) {
+				$name = trim(supprimer_tags($r));
+				$url = extraire_attribut($r, 'href');
+				$tags[strtolower($name) . $url] = $r;
+			}
+		}
+
+		$data['tags'] = array_values($tags);
 
 		$items[] = $data;
 	}
