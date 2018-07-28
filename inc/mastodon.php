@@ -100,20 +100,38 @@ function mastodon_oauth_register_user($domain, $code, $redirect_authorize) {
  * @return array|bool
  */
 function mastodon_oauth_user_token($user_name = '') {
+	static $user_tokens = array();
+
+	if (isset($user_tokens[$user_name])) {
+		return $user_tokens[$user_name];
+	}
+
 	if (!function_exists('lire_config')) {
 		include_spip('inc/config');
 	}
+
 	// si pas de user_name fourni on utilise le compte par defaut
-	if (!$user_name) {
-		$user_name = lire_config('mastodon/default_account');
-	}
-	if (!$user_name
-		or !$token = lire_config('mastodon/accounts/' . $user_name)) {
-		spip_log("mastodon_oauth_user_token : user_name $user_name inconnu","mastodon"._LOG_ERREUR);
-		return false;
+	$account = $user_name;
+	if (!$account) {
+		if (!$account = lire_config('mastodon/default_account')) {
+			spip_log("mastodon_oauth_user_token : aucun user_name par defaut dans mastodon/default_account","mastodon"._LOG_ERREUR);
+			return $user_tokens[$user_name] = false;
+		}
 	}
 
-	return array($user_name, $token);
+	// si on l'a en config c'est tout bon
+	if ($token = lire_config('mastodon/accounts/' . $account)) {
+		return $user_tokens[$user_name] = $user_tokens[$account] = array($account, $token);
+	}
+
+	// sinon on regarde si on a une fonction connue pour recuperer le token de cet user
+	if ($mastodon_oauth_user_token = charger_fonction('mastodon_oauth_user_token', 'inc', true)) {
+		return $user_tokens[$user_name] = $user_tokens[$account] = $mastodon_oauth_user_token($account);
+	}
+
+	// c'est un echec
+	spip_log("mastodon_oauth_user_token : aucun account $user_name ($account) connu","mastodon"._LOG_ERREUR);
+	return $user_tokens[$user_name] = $user_tokens[$account] = false;
 }
 
 /**
