@@ -54,22 +54,22 @@
 	]
 	<form method="post" action="#ENV{action}"><div>
 		#ACTION_FORMULAIRE{SELF}
-		<ul class="editer-groupe">
+		<div class="editer-groupe">
 			#SET{name,host}#SET{obli,''}#SET{defaut,''}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
-			<li class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+			<div class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
 				<label for="#GET{name}"><:mastodon:label_host_ajouter:></label>[
 				<span class='erreur_message'>(#GET{erreurs})</span>
 				]<input type="text" name="#GET{name}" class="text" value="#ENV*{#GET{name},#GET{defaut}}" id="#GET{name}" [(#HTML5|et{#GET{obli}})required='required'] style="width: 15em;"
 			  placeholder="https://mamot.fr"/>
 				<input type="submit" class="submit right" name="append_account" value="<:mastodon:label_associer_compte_mastodon|attribut_html:>" />
-			</li>
-		</ul>
+			</div>
+		</div>
 		<fieldset>
 			<legend><:mastodon:notifications:></legend>
 			<p class="explication"><:mastodon:elements_signaler:></p>
-			<ul>
+			<div class="editer-groupe">
 				#SET{name,default_visibility}#SET{obli,''}#SET{defaut,#CONFIG{mastodon/default_visibility,public}}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
-				<li class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+				<div class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
 					<label for="#GET{name}"><:mastodon:label_default_visibility:></label>[
 					<span class='erreur_message'>(#GET{erreurs})</span>
 					]<select name="#GET{name}" class="select" id="#GET{name}">
@@ -82,8 +82,8 @@
 						#SET{val,direct}
 						<option value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)selected="selected"]>[(#GET{fl}|concat{':label_visibility','_',#GET{val}}|_T)]</option>
 					</select>
-				</li>
-				<li class="editer_notifications">
+				</div>
+				<div class="editer editer_notifications">
 					<label><:mastodon:notifications_publiques:></label>
 					<div>
 						<div class="choix">
@@ -109,10 +109,10 @@
 								(#ENV{evt_publierarticles}|oui)checked="checked"] />
 							<label for="evt_publierarticles"><:mastodon:publier_articles:></label>
 						</div>
-						<ul class="suite[(#ENV{evt_publierarticles}|non)none]" id="evt_publierarticles_options">
+						<div class="suite[(#ENV{evt_publierarticles}|non)none]" id="evt_publierarticles_options">
 							[(#CONFIG{post_dates}|=={non}|oui)
 							#SET{name,evt_publierarticlesfutur}#SET{obli,''}#SET{defaut,'publication'}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
-							<li class="editer pleine_largeur editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
+							<div class="editer pleine_largeur editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
 								<span class='erreur_message'>(#GET{erreurs})</span>
 								]
 								#SET{val,validation}
@@ -125,10 +125,10 @@
 									<input type="radio" name="#GET{name}" class="radio" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)checked="checked"] />
 									<label for="#GET{name}_#GET{val}"><:mastodon:publier_articles_futurs_visibles:></label>
 								</div>
-							</li>
+							</div>
 							]
 							#SET{name,short_url}#SET{obli,''}#SET{defaut,'1'}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
-							<li class="editer pleine_largeur editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
+							<div class="editer pleine_largeur editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
 								<span class='erreur_message'>(#GET{erreurs})</span>
 								]
 								#SET{val,'0'}
@@ -138,31 +138,31 @@
 									<input type="checkbox" name="#GET{name}" class="checkbox" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name},#GET{defaut}}|=={#GET{val}}|oui)checked="checked"] />
 									<label for="#GET{name}_#GET{val}"><:mastodon:publier_articles_shorturl:></label>
 								</div>
-							</li>
+							</div>
 							#SET{name,attente}#SET{obli,''}#SET{defaut,'1'}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
-							<li class="editer long_label editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+							<div class="editer long_label editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
 								<label for="#GET{name}"><:mastodon:publier_articles_attente:></label>[
 								<span class='erreur_message'>(#GET{erreurs})</span>
 								]<input type="text" name="#GET{name}" class="text" value="#ENV*{#GET{name},#GET{defaut}}" id="#GET{name}" [(#HTML5|et{#GET{obli}})required='required']/>
-							</li>
-						</ul>
+							</div>
+						</div>
 					</div>
-				</li>
-			</ul>
+				</div>
+			</div>
 		</fieldset>
 
 		<fieldset>
 			<legend><:mastodon:invite:></legend>
 			<p class="explication"><:mastodon:invite_statut_explications:></p>
-			<ul>
-				<li class="editer editer_invite">
+			<div class="editer-groupe">
+				<div class="editer editer_invite">
 					<div class="choix">
 						<input type="checkbox" name="invite"[
 							(#ENV{invite}|oui)checked="checked"})] id="invite" />
 						<label for="invite"><:mastodon:invite_afficher:></label>
 					</div>
-				</li>
-			</ul>
+				</div>
+			</div>
 		</fieldset>
 
 		<p class="boutons">
@@ -171,7 +171,7 @@
 	</div></form>
 </div>
 <style type="text/css">
-.formulaire_spip ul.suite {margin-left: 15px;}
+.formulaire_spip .suite {margin-left: 15px;}
 </style>
 <script type="text/javascript">
 	function affiche_bloc_synchro(){

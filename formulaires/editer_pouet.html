@@ -17,15 +17,15 @@
 		<input type='submit' class='submit' name="enregistrer" value='<:bouton_enregistrer:>' style="display:none;"/>
 		<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
 			#ACTION_FORMULAIRE{#ENV{action}}
-			<ul class="editer-groupe">
+			<div class="editer-groupe">
 				#SET{fl,mastodon}
 				#SET{name,pouet}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}#SET{obli,'obligatoire'}
-				<li class="editer editer_[(#GET{name})] pleine_largeur[ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
+				<div class="editer editer_[(#GET{name})] pleine_largeur[ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">[
 					<span class='erreur_message'>(#GET{erreurs})</span>
 					]<label for="#GET{name}"><em>[(#ENV{_max_len}|moins{#ENV*{#GET{name}}|strlen})]</em>[(#GET{fl}|concat{':label_',#GET{name}}|_T)]</label>
 					<textarea name="#GET{name}" id="#GET{name}" rows="9" cols="25">#ENV*{#GET{name}}</textarea>
-				</li>
-			</ul>
+				</div>
+			</div>
 			[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
 			<!--extra-->
 			<p class='boutons'>
