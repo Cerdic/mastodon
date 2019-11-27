@@ -1,12 +1,12 @@
 <paquet
 	prefix="mastodon"
 	categorie="communication"
-	version="1.6.1"
+	version="1.7.0"
 	etat="test"
-	compatibilite="[3.0.0;3.2.*]"
+	compatibilite="[3.0.0;3.3.*]"
 	schema="1.0.0"
-	logo="prive/themes/spip/images/mastodon-32.png"
-	documentation=""
+	logo="prive/themes/spip/images/mastodon-64.png"
+	documentation="https://contrib.spip.net/mastodon"
 >
 
 	<nom>Mastodon</nom>
