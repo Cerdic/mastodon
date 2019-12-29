@@ -275,6 +275,12 @@ function mastodon_api_call($command,$type='get',$params=array(),$options=null){
 		if ($app = mastodon_oauth_load_registered_app(reset($user))) {
 
 			$res = $app->callApi($command, $type, $params);
+			if (intval($res['http_code']/100) == 4) {
+				$error = "Requete invalide : ".json_encode($res);
+				spip_log("mastodon_api_call:$error", "mastodon", _LOG_ERREUR);
+				return false;
+			}
+
 			if ($cache_key and $res['http_code'])
 				cache_set($cache_key,$res,_MASTODON_API_CALL_MICROCACHE_DELAY*2);
 		}
@@ -499,12 +505,12 @@ function mastodon_search_user($user, $host = ''){
 	}
 	$options['q'] = $url_user;
 
-	$res = mastodon_api_call('search', 'get', $options);
-	if (!$res or !isset($res['accounts']) or !count($res['accounts'])) {
+	$res = mastodon_api_call('accounts/search', 'get', $options);
+	if (!$res or !count($res)) {
 		return false;
 	}
 
-	$res = reset($res['accounts']);
+	$res = reset($res);
 	return $res;
 }
 
@@ -524,8 +530,10 @@ function mastodon_search_user($user, $host = ''){
 function mastodon_get_statuses($options = array()) {
 	// si pas d'api utilisable on sort
 	if (!$user = mastodon_oauth_user_token(isset($options['mastodon_account']) ? $options['mastodon_account'] : null)
-	  or !$app = mastodon_oauth_load_registered_app(reset($user)))
+	  or !$app = mastodon_oauth_load_registered_app(reset($user))) {
+		spip_log("mastodon_get_statuses: token ou app invalide", 'mastodon'. _LOG_ERREUR);
 		return false;
+	}
 
 	$params = array();
 	$limit = 40;

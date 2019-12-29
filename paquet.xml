@@ -1,8 +1,8 @@
 <paquet
 	prefix="mastodon"
 	categorie="communication"
-	version="1.7.0"
-	etat="test"
+	version="1.8.0"
+	etat="stable"
 	compatibilite="[3.0.0;3.3.*]"
 	schema="1.0.0"
 	logo="prive/themes/spip/images/mastodon-64.png"

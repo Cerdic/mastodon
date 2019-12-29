@@ -113,6 +113,7 @@ function mastodon_syndiquer_user($qui, $url_parts) {
 
 	// retrouver l'id de l'utilisateur
 	if (!$user = mastodon_search_user($qui[0], $url_parts['host'])) {
+		spip_log("mastodon_syndiquer_user: echec pour retrouver user ".json_encode(array('qui'=>$qui, 'url_parts'=>$url_parts)), 'mastodon'. _LOG_ERREUR);
 		return false;
 	}
 	$options['id'] = $user['id'];
