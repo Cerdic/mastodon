@@ -1,7 +1,7 @@
 <paquet
 	prefix="mastodon"
 	categorie="communication"
-	version="1.8.0"
+	version="1.8.1"
 	etat="stable"
 	compatibilite="[3.0.0;3.3.*]"
 	schema="1.0.0"

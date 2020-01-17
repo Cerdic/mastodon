@@ -274,19 +274,28 @@ function mastodon_api_call($command,$type='get',$params=array(),$options=null){
 
 		if ($app = mastodon_oauth_load_registered_app(reset($user))) {
 
-			$res = $app->callApi($command, $type, $params);
-			if (intval($res['http_code']/100) == 4) {
-				$error = "Requete invalide : ".json_encode($res);
-				spip_log("mastodon_api_call:$error", "mastodon", _LOG_ERREUR);
-				return false;
+			try {
+				$res = $app->callApi($command, $type, $params);
+				if (intval($res['http_code']/100) == 4) {
+					$error = "Requete invalide : ".json_encode($res);
+					spip_log("mastodon_api_call: $command $error", "mastodon", _LOG_ERREUR);
+					return false;
+				}
+				if ($cache_key and $res['http_code']) {
+					cache_set($cache_key,$res,_MASTODON_API_CALL_MICROCACHE_DELAY*2);
+				}
 			}
-
-			if ($cache_key and $res['http_code'])
-				cache_set($cache_key,$res,_MASTODON_API_CALL_MICROCACHE_DELAY*2);
+			catch (Exception $e) {
+				spip_log("mastodon_api_call: $command " . $e->getMessage(),"mastodon" . _LOG_ERREUR);
+				if (!$res or $command === 'accounts/verify_credentials') {
+					return false;
+				}
+			}
 		}
 		else {
-			if (!$res)
+			if (!$res) {
 				return false;
+			}
 			spip_log("mastodon_api_call:$command echec connexion, on utilise le cache perime","mastodon"._LOG_INFO_IMPORTANTE);
 		}
 	}
